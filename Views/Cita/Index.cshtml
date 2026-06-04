@@ -1,0 +1,44 @@
+﻿@model IEnumerable<ArqSoft_S05_Diego.Models.Cita>
+
+@{
+    ViewData["Title"] = "Citas";
+}
+
+<div class="container mt-5">
+    <h1 class="mb-4">Listado de Citas</h1>
+
+    <table class="table table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Id</th>
+                <th>Paciente</th>
+                <th>M�dico</th>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Motivo</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cita in Model)
+            {
+                var paciente = ((IEnumerable<ArqSoft_S05_Diego.Models.Paciente>)ViewBag.Pacientes)?.FirstOrDefault(p => p.Id == cita.PacienteId);
+                var medico = ((IEnumerable<ArqSoft_S05_Diego.Models.Medico>)ViewBag.Medicos)?.FirstOrDefault(m => m.Id == cita.MedicoId);
+
+                <tr>
+                    <td>@cita.Id</td>
+                    <td>@paciente?.Nombre @paciente?.Apellido</td>
+                    <td>@medico?.Nombre @medico?.Apellido</td>
+                    <td>@cita.Fecha.ToString("dd/MM/yyyy")</td>
+                    <td>@cita.Hora</td>
+                    <td>@cita.Motivo</td>
+                    <td>
+                        <span class="badge @(cita.Estado == "Confirmada" ? "bg-success" : cita.Estado == "Cancelada" ? "bg-danger" : "bg-warning")">
+                            @cita.Estado
+                        </span>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

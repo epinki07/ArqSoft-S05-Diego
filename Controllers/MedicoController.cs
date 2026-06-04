@@ -1,0 +1,23 @@
+using ArqSoft_S05_Diego.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+
+namespace ArqSoft_S05_Diego.Controllers
+{
+    public class MedicoController : Controller
+    {
+        private readonly IMedicoRepository _repo;
+
+        public MedicoController(IMedicoRepository repo)
+        {
+            _repo = repo;
+        }
+
+        public IActionResult Index() => View(_repo.ObtenerTodos());
+
+        public IActionResult Detalle(int id)
+        {
+            var medico = _repo.ObtenerPorId(id);
+            return medico == null ? NotFound() : View(medico);
+        }
+    }
+}

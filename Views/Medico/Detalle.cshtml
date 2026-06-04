@@ -1,0 +1,39 @@
+﻿@model ArqSoft_S05_Diego.Models.Medico
+
+@{
+    ViewData["Title"] = "Detalle del M�dico";
+}
+
+<div class="container mt-5">
+    <h1>Detalle del M�dico</h1>
+
+    <div class="card mt-4">
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <strong>Nombre:</strong>
+                    <p>@Model.Nombre</p>
+                </div>
+                <div class="col-md-6">
+                    <strong>Apellido:</strong>
+                    <p>@Model.Apellido</p>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <strong>Especialidad:</strong>
+                    <p>@Model.Especialidad</p>
+                </div>
+                <div class="col-md-6">
+                    <strong>N�mero de Licencia:</strong>
+                    <p>@Model.NumeroLicencia</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a href="@Url.Action("Index", "Medico")" class="btn btn-secondary">Volver al Listado</a>
+    </div>
+</div>

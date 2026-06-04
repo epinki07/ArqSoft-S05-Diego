@@ -1,0 +1,40 @@
+@model ArqSoft_S05_Diego.Models.Paciente
+
+@{
+    ViewData["Title"] = "Detalle del Paciente";
+}
+
+<div class="container mt-5">
+    <h1>Detalle del Paciente</h1>
+
+    <div class="card mt-4">
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <strong>Nombre:</strong>
+                    <p>@Model.Nombre</p>
+                </div>
+                <div class="col-md-6">
+                    <strong>Apellido:</strong>
+                    <p>@Model.Apellido</p>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <strong>Email:</strong>
+                    <p>@Model.Email</p>
+                </div>
+                <div class="col-md-6">
+                    <strong>Telefono:</strong>
+                    <p>@Model.Telefono</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a href="@Url.Action("PorPaciente", "Cita", new { pacienteId = Model.Id })" class="btn btn-warning">Ver mis Citas</a>
+        <a href="@Url.Action("Index", "Paciente")" class="btn btn-secondary">Volver al Listado</a>
+    </div>
+</div>
