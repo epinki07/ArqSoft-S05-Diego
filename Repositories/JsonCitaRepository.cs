@@ -10,7 +10,7 @@ namespace ArqSoft_S05_Diego.Repositories
 
         public JsonCitaRepository(IWebHostEnvironment env)
         {
-            _filePath = Path.Combine(env.ContentRootPath, "Data", "citas.json");
+            _filePath = Path.Combine(env.ContentRootPath, "Data", "Citas.json");
         }
 
         public IEnumerable<Cita> ObtenerTodos()
@@ -23,25 +23,8 @@ namespace ArqSoft_S05_Diego.Repositories
                 }
 
                 var json = File.ReadAllText(_filePath);
-                using var doc = JsonDocument.Parse(json);
-                var citas = new List<Cita>();
-                var citasArray = doc.RootElement.GetProperty("citas");
-
-                foreach (var citaElement in citasArray.EnumerateArray())
-                {
-                    citas.Add(new Cita
-                    {
-                        Id = citaElement.GetProperty("id").GetInt32(),
-                        PacienteId = citaElement.GetProperty("pacienteId").GetInt32(),
-                        MedicoId = citaElement.GetProperty("medicoId").GetInt32(),
-                        Fecha = DateOnly.Parse(citaElement.GetProperty("fecha").GetString() ?? string.Empty),
-                        Hora = TimeOnly.Parse(citaElement.GetProperty("hora").GetString() ?? string.Empty),
-                        Motivo = citaElement.GetProperty("motivo").GetString() ?? string.Empty,
-                        Estado = citaElement.GetProperty("estado").GetString() ?? "Pendiente"
-                    });
-                }
-
-                return citas;
+                return JsonSerializer.Deserialize<List<Cita>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
+                    ?? new List<Cita>();
             }
             catch
             {

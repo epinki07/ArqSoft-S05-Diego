@@ -10,7 +10,7 @@ namespace ArqSoft_S05_Diego.Repositories
 
         public JsonPacienteRepository(IWebHostEnvironment env)
         {
-            _filePath = Path.Combine(env.ContentRootPath, "Data", "citas.json");
+            _filePath = Path.Combine(env.ContentRootPath, "Data", "Pacientes.json");
         }
 
         public IEnumerable<Paciente> ObtenerTodos()
@@ -23,23 +23,8 @@ namespace ArqSoft_S05_Diego.Repositories
                 }
 
                 var json = File.ReadAllText(_filePath);
-                using var doc = JsonDocument.Parse(json);
-                var pacientes = new List<Paciente>();
-                var pacientesArray = doc.RootElement.GetProperty("pacientes");
-
-                foreach (var pacienteElement in pacientesArray.EnumerateArray())
-                {
-                    pacientes.Add(new Paciente
-                    {
-                        Id = pacienteElement.GetProperty("id").GetInt32(),
-                        Nombre = pacienteElement.GetProperty("nombre").GetString() ?? string.Empty,
-                        Apellido = pacienteElement.GetProperty("apellido").GetString() ?? string.Empty,
-                        Email = pacienteElement.GetProperty("email").GetString() ?? string.Empty,
-                        Telefono = pacienteElement.GetProperty("telefono").GetString() ?? string.Empty
-                    });
-                }
-
-                return pacientes;
+                return JsonSerializer.Deserialize<List<Paciente>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
+                    ?? new List<Paciente>();
             }
             catch
             {
@@ -47,9 +32,9 @@ namespace ArqSoft_S05_Diego.Repositories
             }
         }
 
-        public Paciente? ObtenerPorId(int id)
+        public Paciente ObtenerPorId(int id)
         {
-            return ObtenerTodos().FirstOrDefault(p => p.Id == id);
+            return ObtenerTodos().FirstOrDefault(p => p.Id == id) ?? new Paciente();
         }
     }
 }
