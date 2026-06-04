@@ -1,1 +1,45 @@
-﻿
+@model IEnumerable<ArqSoft_S05_Diego.Models.Paciente>
+
+@{
+    ViewData["Title"] = "Pacientes";
+}
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Listado de Pacientes</h1>
+        <a href="@Url.Action("Create", "Paciente")" class="btn btn-success">+ Agregar Paciente</a>
+    </div>
+
+    <table class="table table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Email</th>
+                <th>Telefono</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var paciente in Model)
+            {
+                <tr>
+                    <td>@paciente.Id</td>
+                    <td>@paciente.Nombre</td>
+                    <td>@paciente.Apellido</td>
+                    <td>@paciente.Email</td>
+                    <td>@paciente.Telefono</td>
+                    <td>
+                        <a href="@Url.Action("Detalle", "Paciente", new { id = paciente.Id })" class="btn btn-sm btn-info">Ver Detalle</a>
+                        <a href="@Url.Action("Edit", "Paciente", new { id = paciente.Id })" class="btn btn-sm btn-warning">Editar</a>
+                        <form method="post" action="@Url.Action("Delete", "Paciente")" style="display:inline;">
+                            <input type="hidden" name="id" value="@paciente.Id" />
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Esta seguro?')">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

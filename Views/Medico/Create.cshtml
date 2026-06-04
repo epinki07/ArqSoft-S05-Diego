@@ -1,0 +1,40 @@
+@model ArqSoft_S05_Diego.Models.Medico
+
+@{
+    ViewData["Title"] = "Agregar Medico";
+}
+
+<div class="container mt-5">
+    <h1 class="mb-4">Agregar Nuevo Medico</h1>
+
+    <form method="post" class="row g-3">
+        <div class="col-md-6">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre del medico" required>
+            <span asp-validation-for="Nombre" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label for="apellido" class="form-label">Apellido</label>
+            <input type="text" class="form-control" id="apellido" name="apellido" placeholder="Apellido del medico" required>
+            <span asp-validation-for="Apellido" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label for="especialidad" class="form-label">Especialidad</label>
+            <input type="text" class="form-control" id="especialidad" name="especialidad" placeholder="Ej: Cardiologia" required>
+            <span asp-validation-for="Especialidad" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label for="numeroLicencia" class="form-label">Numero de Licencia</label>
+            <input type="text" class="form-control" id="numeroLicencia" name="numeroLicencia" placeholder="Ej: CA-30117" required>
+            <span asp-validation-for="NumeroLicencia" class="text-danger"></span>
+        </div>
+
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Guardar Medico</button>
+            <a href="@Url.Action("Index", "Medico")" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>

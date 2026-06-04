@@ -36,5 +36,67 @@ namespace ArqSoft_S05_Diego.Repositories
         {
             return ObtenerTodos().FirstOrDefault(m => m.Id == id) ?? new Medico();
         }
+
+        public void Agregar(Medico medico)
+        {
+            try
+            {
+                var medicos = ObtenerTodos().ToList();
+                medico.Id = medicos.Count > 0 ? medicos.Max(m => m.Id) + 1 : 1;
+                medicos.Add(medico);
+                Guardar(medicos);
+            }
+            catch
+            {
+            }
+        }
+
+        public void Editar(Medico medico)
+        {
+            try
+            {
+                var medicos = ObtenerTodos().ToList();
+                var medicoExistente = medicos.FirstOrDefault(m => m.Id == medico.Id);
+                if (medicoExistente == null)
+                {
+                    return;
+                }
+
+                medicoExistente.Nombre = medico.Nombre;
+                medicoExistente.Apellido = medico.Apellido;
+                medicoExistente.Especialidad = medico.Especialidad;
+                medicoExistente.NumeroLicencia = medico.NumeroLicencia;
+                Guardar(medicos);
+            }
+            catch
+            {
+            }
+        }
+
+        public void Eliminar(int id)
+        {
+            try
+            {
+                var medicos = ObtenerTodos().ToList();
+                var medico = medicos.FirstOrDefault(m => m.Id == id);
+                if (medico == null)
+                {
+                    return;
+                }
+
+                medicos.Remove(medico);
+                Guardar(medicos);
+            }
+            catch
+            {
+            }
+        }
+
+        private void Guardar(List<Medico> medicos)
+        {
+            var options = new JsonSerializerOptions { WriteIndented = true, PropertyNameCaseInsensitive = true };
+            var json = JsonSerializer.Serialize(medicos, options);
+            File.WriteAllText(_filePath, json);
+        }
     }
 }

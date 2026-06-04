@@ -1,0 +1,40 @@
+@model ArqSoft_S05_Diego.Models.Paciente
+
+@{
+    ViewData["Title"] = "Agregar Paciente";
+}
+
+<div class="container mt-5">
+    <h1 class="mb-4">Agregar Nuevo Paciente</h1>
+
+    <form method="post" class="row g-3">
+        <div class="col-md-6">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre del paciente" required>
+            <span asp-validation-for="Nombre" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label for="apellido" class="form-label">Apellido</label>
+            <input type="text" class="form-control" id="apellido" name="apellido" placeholder="Apellido del paciente" required>
+            <span asp-validation-for="Apellido" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="correo@ejemplo.com" required>
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label for="telefono" class="form-label">Telefono</label>
+            <input type="tel" class="form-control" id="telefono" name="telefono" placeholder="555-0000" required>
+            <span asp-validation-for="Telefono" class="text-danger"></span>
+        </div>
+
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Guardar Paciente</button>
+            <a href="@Url.Action("Index", "Paciente")" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>

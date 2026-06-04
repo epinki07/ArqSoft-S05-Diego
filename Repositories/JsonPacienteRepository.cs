@@ -36,5 +36,67 @@ namespace ArqSoft_S05_Diego.Repositories
         {
             return ObtenerTodos().FirstOrDefault(p => p.Id == id) ?? new Paciente();
         }
+
+        public void Agregar(Paciente paciente)
+        {
+            try
+            {
+                var pacientes = ObtenerTodos().ToList();
+                paciente.Id = pacientes.Count > 0 ? pacientes.Max(p => p.Id) + 1 : 1;
+                pacientes.Add(paciente);
+                Guardar(pacientes);
+            }
+            catch
+            {
+            }
+        }
+
+        public void Editar(Paciente paciente)
+        {
+            try
+            {
+                var pacientes = ObtenerTodos().ToList();
+                var pacienteExistente = pacientes.FirstOrDefault(p => p.Id == paciente.Id);
+                if (pacienteExistente == null)
+                {
+                    return;
+                }
+
+                pacienteExistente.Nombre = paciente.Nombre;
+                pacienteExistente.Apellido = paciente.Apellido;
+                pacienteExistente.Email = paciente.Email;
+                pacienteExistente.Telefono = paciente.Telefono;
+                Guardar(pacientes);
+            }
+            catch
+            {
+            }
+        }
+
+        public void Eliminar(int id)
+        {
+            try
+            {
+                var pacientes = ObtenerTodos().ToList();
+                var paciente = pacientes.FirstOrDefault(p => p.Id == id);
+                if (paciente == null)
+                {
+                    return;
+                }
+
+                pacientes.Remove(paciente);
+                Guardar(pacientes);
+            }
+            catch
+            {
+            }
+        }
+
+        private void Guardar(List<Paciente> pacientes)
+        {
+            var options = new JsonSerializerOptions { WriteIndented = true, PropertyNameCaseInsensitive = true };
+            var json = JsonSerializer.Serialize(pacientes, options);
+            File.WriteAllText(_filePath, json);
+        }
     }
 }

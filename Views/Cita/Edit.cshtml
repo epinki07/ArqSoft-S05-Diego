@@ -1,0 +1,69 @@
+@model ArqSoft_S05_Diego.Models.Cita
+
+@{
+    ViewData["Title"] = "Editar Cita";
+}
+
+<div class="container mt-5">
+    <h1 class="mb-4">Editar Cita</h1>
+
+    <form method="post" class="row g-3">
+        <input type="hidden" name="id" value="@Model.Id" />
+
+        <div class="col-md-6">
+            <label for="pacienteId" class="form-label">Paciente</label>
+            <select class="form-select" id="pacienteId" name="pacienteId" required>
+                <option value="">Seleccionar paciente...</option>
+                @foreach (var paciente in (IEnumerable<ArqSoft_S05_Diego.Models.Paciente>)ViewBag.Pacientes)
+                {
+                    <option value="@paciente.Id" selected="@(paciente.Id == Model.PacienteId ? "selected" : null)">@paciente.Nombre @paciente.Apellido</option>
+                }
+            </select>
+            <span asp-validation-for="PacienteId" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label for="medicoId" class="form-label">Medico</label>
+            <select class="form-select" id="medicoId" name="medicoId" required>
+                <option value="">Seleccionar medico...</option>
+                @foreach (var medico in (IEnumerable<ArqSoft_S05_Diego.Models.Medico>)ViewBag.Medicos)
+                {
+                    <option value="@medico.Id" selected="@(medico.Id == Model.MedicoId ? "selected" : null)">@medico.Nombre @medico.Apellido (@medico.Especialidad)</option>
+                }
+            </select>
+            <span asp-validation-for="MedicoId" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label for="fecha" class="form-label">Fecha</label>
+            <input type="date" class="form-control" id="fecha" name="fecha" value="@Model.Fecha.ToString("yyyy-MM-dd")" required>
+            <span asp-validation-for="Fecha" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label for="hora" class="form-label">Hora</label>
+            <input type="time" class="form-control" id="hora" name="hora" value="@Model.Hora.ToString("HH:mm")" required>
+            <span asp-validation-for="Hora" class="text-danger"></span>
+        </div>
+
+        <div class="col-12">
+            <label for="motivo" class="form-label">Motivo</label>
+            <input type="text" class="form-control" id="motivo" name="motivo" value="@Model.Motivo" placeholder="Motivo de la consulta" required>
+            <span asp-validation-for="Motivo" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label for="estado" class="form-label">Estado</label>
+            <select class="form-select" id="estado" name="estado">
+                <option value="Pendiente" selected="@(Model.Estado == "Pendiente" ? "selected" : null)">Pendiente</option>
+                <option value="Confirmada" selected="@(Model.Estado == "Confirmada" ? "selected" : null)">Confirmada</option>
+                <option value="Cancelada" selected="@(Model.Estado == "Cancelada" ? "selected" : null)">Cancelada</option>
+            </select>
+        </div>
+
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+            <a href="@Url.Action("Index", "Cita")" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>

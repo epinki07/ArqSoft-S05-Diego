@@ -1,11 +1,14 @@
-﻿@model IEnumerable<ArqSoft_S05_Diego.Models.Medico>
+@model IEnumerable<ArqSoft_S05_Diego.Models.Medico>
 
 @{
-    ViewData["Title"] = "M�dicos";
+    ViewData["Title"] = "Medicos";
 }
 
 <div class="container mt-5">
-    <h1 class="mb-4">Listado de M�dicos</h1>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Listado de Medicos</h1>
+        <a href="@Url.Action("Create", "Medico")" class="btn btn-success">+ Agregar Medico</a>
+    </div>
 
     <table class="table table-striped">
         <thead class="table-dark">
@@ -14,7 +17,7 @@
                 <th>Nombre</th>
                 <th>Apellido</th>
                 <th>Especialidad</th>
-                <th>N�mero de Licencia</th>
+                <th>Numero de Licencia</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -29,6 +32,11 @@
                     <td>@medico.NumeroLicencia</td>
                     <td>
                         <a href="@Url.Action("Detalle", "Medico", new { id = medico.Id })" class="btn btn-sm btn-info">Ver Detalle</a>
+                        <a href="@Url.Action("Edit", "Medico", new { id = medico.Id })" class="btn btn-sm btn-warning">Editar</a>
+                        <form method="post" action="@Url.Action("Delete", "Medico")" style="display:inline;">
+                            <input type="hidden" name="id" value="@medico.Id" />
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Esta seguro?')">Eliminar</button>
+                        </form>
                     </td>
                 </tr>
             }
