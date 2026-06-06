@@ -1,54 +1,58 @@
-﻿@model IEnumerable<ArqSoft_S05_Diego.Models.Cita>
+@model IEnumerable<ArqSoft_S05_Diego.Models.Cita>
 
 @{
     ViewData["Title"] = "Citas por Paciente";
 }
 
-<div class="container mt-5">
-    <h1 class="mb-4">Citas por Paciente</h1>
+<section class="section-panel">
+    <div class="section-header">
+        <div>
+            <h1>Citas por paciente</h1>
+            <p>Historial de citas asociadas al paciente seleccionado.</p>
+        </div>
+        <a asp-controller="Cita" asp-action="Index" class="btn btn-outline-secondary">Volver</a>
+    </div>
 
-    <table class="table table-striped">
-        <thead class="table-dark">
-            <tr>
-                <th>Id</th>
-                <th>M�dico</th>
-                <th>Fecha</th>
-                <th>Hora</th>
-                <th>Motivo</th>
-                <th>Estado</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (Model?.Any() == true)
-            {
-                @foreach (var cita in Model)
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Medico</th>
+                    <th>Fecha</th>
+                    <th>Hora</th>
+                    <th>Motivo</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model?.Any() == true)
                 {
-                    var medico = ((IEnumerable<ArqSoft_S05_Diego.Models.Medico>)ViewBag.Medicos)?.FirstOrDefault(m => m.Id == cita.MedicoId);
+                    @foreach (var cita in Model)
+                    {
+                        var medico = ((IEnumerable<ArqSoft_S05_Diego.Models.Medico>)ViewBag.Medicos)?.FirstOrDefault(m => m.Id == cita.MedicoId);
 
+                        <tr>
+                            <td>@cita.Id</td>
+                            <td>@medico?.Nombre @medico?.Apellido</td>
+                            <td>@cita.Fecha.ToString("dd/MM/yyyy")</td>
+                            <td>@cita.Hora</td>
+                            <td>@cita.Motivo</td>
+                            <td>
+                                <span class="badge @(cita.Estado == "Confirmada" ? "bg-success" : cita.Estado == "Cancelada" ? "bg-danger" : "bg-warning text-dark")">
+                                    @cita.Estado
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
                     <tr>
-                        <td>@cita.Id</td>
-                        <td>@medico?.Nombre @medico?.Apellido</td>
-                        <td>@cita.Fecha.ToString("dd/MM/yyyy")</td>
-                        <td>@cita.Hora</td>
-                        <td>@cita.Motivo</td>
-                        <td>
-                            <span class="badge @(cita.Estado == "Confirmada" ? "bg-success" : cita.Estado == "Cancelada" ? "bg-danger" : "bg-warning")">
-                                @cita.Estado
-                            </span>
-                        </td>
+                        <td colspan="6" class="empty-row">No hay citas para este paciente.</td>
                     </tr>
                 }
-            }
-            else
-            {
-                <tr>
-                    <td colspan="6" class="text-center">No hay citas para este paciente</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
-    <div class="mt-4">
-        <a href="@Url.Action("Index", "Cita")" class="btn btn-secondary">Volver al Listado</a>
+            </tbody>
+        </table>
     </div>
-</div>
+</section>

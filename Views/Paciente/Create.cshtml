@@ -4,8 +4,11 @@
     ViewData["Title"] = "Agregar Paciente";
 }
 
-<div class="container mt-5">
-    <h1 class="mb-4">Agregar Nuevo Paciente</h1>
+<section class="form-panel">
+    <div class="form-title">
+        <h1>Agregar paciente</h1>
+        <p>Captura la informacion de contacto del paciente.</p>
+    </div>
 
     <form method="post" class="row g-3">
         <div class="col-md-6">
@@ -32,9 +35,9 @@
             <span asp-validation-for="Telefono" class="text-danger"></span>
         </div>
 
-        <div class="col-12">
-            <button type="submit" class="btn btn-primary">Guardar Paciente</button>
-            <a href="@Url.Action("Index", "Paciente")" class="btn btn-secondary">Cancelar</a>
+        <div class="col-12 d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Guardar paciente</button>
+            <a asp-controller="Paciente" asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
         </div>
     </form>
-</div>
+</section>

@@ -4,37 +4,29 @@
     ViewData["Title"] = "Detalle del Paciente";
 }
 
-<div class="container mt-5">
-    <h1>Detalle del Paciente</h1>
+<section class="detail-panel">
+    <div class="form-title">
+        <h1>@Model.Nombre @Model.Apellido</h1>
+        <p>Detalle del paciente registrado.</p>
+    </div>
 
-    <div class="card mt-4">
-        <div class="card-body">
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <strong>Nombre:</strong>
-                    <p>@Model.Nombre</p>
-                </div>
-                <div class="col-md-6">
-                    <strong>Apellido:</strong>
-                    <p>@Model.Apellido</p>
-                </div>
+    <div class="row g-3">
+        <div class="col-md-6">
+            <div class="detail-item">
+                <span>Email</span>
+                <strong>@Model.Email</strong>
             </div>
-
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <strong>Email:</strong>
-                    <p>@Model.Email</p>
-                </div>
-                <div class="col-md-6">
-                    <strong>Telefono:</strong>
-                    <p>@Model.Telefono</p>
-                </div>
+        </div>
+        <div class="col-md-6">
+            <div class="detail-item">
+                <span>Telefono</span>
+                <strong>@Model.Telefono</strong>
             </div>
         </div>
     </div>
 
-    <div class="mt-4">
-        <a href="@Url.Action("PorPaciente", "Cita", new { pacienteId = Model.Id })" class="btn btn-warning">Ver mis Citas</a>
-        <a href="@Url.Action("Index", "Paciente")" class="btn btn-secondary">Volver al Listado</a>
+    <div class="mt-4 d-flex gap-2">
+        <a asp-controller="Cita" asp-action="PorPaciente" asp-route-pacienteId="@Model.Id" class="btn btn-primary">Ver citas</a>
+        <a asp-controller="Paciente" asp-action="Index" class="btn btn-outline-secondary">Volver</a>
     </div>
-</div>
+</section>

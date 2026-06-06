@@ -1,8 +1,46 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@{
+    ViewData["Title"] = "Inicio";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<section class="page-hero">
+    <div>
+        <p class="eyebrow">Panel principal</p>
+        <h1>Gestion de citas medicas</h1>
+        <p class="hero-copy">Administra pacientes, medicos y citas desde una interfaz centralizada.</p>
+    </div>
+    <a class="btn btn-primary" asp-controller="Cita" asp-action="Create">Nueva cita</a>
+</section>
+
+<section class="stats-grid">
+    <article class="stat-card">
+        <span>Pacientes</span>
+        <strong>@ViewBag.TotalPacientes</strong>
+    </article>
+    <article class="stat-card">
+        <span>Medicos</span>
+        <strong>@ViewBag.TotalMedicos</strong>
+    </article>
+    <article class="stat-card">
+        <span>Citas</span>
+        <strong>@ViewBag.TotalCitas</strong>
+    </article>
+    <article class="stat-card">
+        <span>Pendientes</span>
+        <strong>@ViewBag.CitasPendientes</strong>
+    </article>
+</section>
+
+<section class="quick-actions">
+    <a class="action-panel" asp-controller="Paciente" asp-action="Index">
+        <span>Pacientes</span>
+        <strong>Ver y registrar pacientes</strong>
+    </a>
+    <a class="action-panel" asp-controller="Medico" asp-action="Index">
+        <span>Medicos</span>
+        <strong>Administrar especialistas</strong>
+    </a>
+    <a class="action-panel" asp-controller="Cita" asp-action="Index">
+        <span>Citas</span>
+        <strong>Consultar agenda medica</strong>
+    </a>
+</section>
