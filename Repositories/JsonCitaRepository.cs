@@ -1,8 +1,8 @@
-using ArqSoft_S05_Diego.Interfaces;
-using ArqSoft_S05_Diego.Models;
+using CitasApp.Interfaces;
+using CitasApp.Models;
 using System.Text.Json;
 
-namespace ArqSoft_S05_Diego.Repositories
+namespace CitasApp.Repositories
 {
     public class JsonCitaRepository : ICitaRepository
     {
@@ -18,13 +18,13 @@ namespace ArqSoft_S05_Diego.Repositories
             try
             {
                 if (!File.Exists(_filePath))
-                {
                     return Enumerable.Empty<Cita>();
-                }
 
                 var json = File.ReadAllText(_filePath);
-                return JsonSerializer.Deserialize<List<Cita>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
+                var citas = JsonSerializer.Deserialize<List<Cita>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
                     ?? new List<Cita>();
+
+                return citas;
             }
             catch
             {
@@ -34,12 +34,8 @@ namespace ArqSoft_S05_Diego.Repositories
 
         public IEnumerable<Cita> ObtenerPorPaciente(int pacienteId)
         {
-            return ObtenerTodos().Where(c => c.PacienteId == pacienteId);
-        }
-
-        public Cita ObtenerPorId(int id)
-        {
-            return ObtenerTodos().FirstOrDefault(c => c.Id == id) ?? new Cita();
+            var citas = ObtenerTodos();
+            return citas.Where(c => c.PacienteId == pacienteId);
         }
 
         public void Agregar(Cita cita)
@@ -49,11 +45,21 @@ namespace ArqSoft_S05_Diego.Repositories
                 var citas = ObtenerTodos().ToList();
                 cita.Id = citas.Count > 0 ? citas.Max(c => c.Id) + 1 : 1;
                 citas.Add(cita);
-                Guardar(citas);
+
+                var options = new JsonSerializerOptions { WriteIndented = true, PropertyNameCaseInsensitive = true };
+                var json = JsonSerializer.Serialize(citas, options);
+                File.WriteAllText(_filePath, json);
             }
             catch
             {
+                // Manejo de error silencioso
             }
+        }
+
+        public Cita ObtenerPorId(int id)
+        {
+            var citas = ObtenerTodos();
+            return citas.FirstOrDefault(c => c.Id == id) ?? new Cita();
         }
 
         public void Editar(Cita cita)
@@ -62,21 +68,23 @@ namespace ArqSoft_S05_Diego.Repositories
             {
                 var citas = ObtenerTodos().ToList();
                 var citaExistente = citas.FirstOrDefault(c => c.Id == cita.Id);
-                if (citaExistente == null)
+                if (citaExistente != null)
                 {
-                    return;
-                }
+                    citaExistente.PacienteId = cita.PacienteId;
+                    citaExistente.MedicoId = cita.MedicoId;
+                    citaExistente.Fecha = cita.Fecha;
+                    citaExistente.Hora = cita.Hora;
+                    citaExistente.Motivo = cita.Motivo;
+                    citaExistente.Estado = cita.Estado;
 
-                citaExistente.PacienteId = cita.PacienteId;
-                citaExistente.MedicoId = cita.MedicoId;
-                citaExistente.Fecha = cita.Fecha;
-                citaExistente.Hora = cita.Hora;
-                citaExistente.Motivo = cita.Motivo;
-                citaExistente.Estado = cita.Estado;
-                Guardar(citas);
+                    var options = new JsonSerializerOptions { WriteIndented = true, PropertyNameCaseInsensitive = true };
+                    var json = JsonSerializer.Serialize(citas, options);
+                    File.WriteAllText(_filePath, json);
+                }
             }
             catch
             {
+                // Manejo de error silencioso
             }
         }
 
@@ -86,24 +94,19 @@ namespace ArqSoft_S05_Diego.Repositories
             {
                 var citas = ObtenerTodos().ToList();
                 var cita = citas.FirstOrDefault(c => c.Id == id);
-                if (cita == null)
+                if (cita != null)
                 {
-                    return;
-                }
+                    citas.Remove(cita);
 
-                citas.Remove(cita);
-                Guardar(citas);
+                    var options = new JsonSerializerOptions { WriteIndented = true, PropertyNameCaseInsensitive = true };
+                    var json = JsonSerializer.Serialize(citas, options);
+                    File.WriteAllText(_filePath, json);
+                }
             }
             catch
             {
+                // Manejo de error silencioso
             }
-        }
-
-        private void Guardar(List<Cita> citas)
-        {
-            var options = new JsonSerializerOptions { WriteIndented = true, PropertyNameCaseInsensitive = true };
-            var json = JsonSerializer.Serialize(citas, options);
-            File.WriteAllText(_filePath, json);
         }
     }
 }

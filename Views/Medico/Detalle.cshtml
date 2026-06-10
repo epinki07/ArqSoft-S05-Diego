@@ -1,31 +1,39 @@
-@model ArqSoft_S05_Diego.Models.Medico
+@model CitasApp.Models.Medico
 
 @{
-    ViewData["Title"] = "Detalle del Medico";
+    ViewData["Title"] = "Detalle del Médico";
 }
 
-<section class="detail-panel">
-    <div class="form-title">
-        <h1>@Model.Nombre @Model.Apellido</h1>
-        <p>Detalle del medico registrado.</p>
-    </div>
+<div class="container mt-5">
+    <h1>Detalle del Médico</h1>
 
-    <div class="row g-3">
-        <div class="col-md-6">
-            <div class="detail-item">
-                <span>Especialidad</span>
-                <strong>@Model.Especialidad</strong>
+    <div class="card mt-4">
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <strong>Nombre:</strong>
+                    <p>@Model.Nombre</p>
+                </div>
+                <div class="col-md-6">
+                    <strong>Apellido:</strong>
+                    <p>@Model.Apellido</p>
+                </div>
             </div>
-        </div>
-        <div class="col-md-6">
-            <div class="detail-item">
-                <span>Numero de licencia</span>
-                <strong>@Model.NumeroLicencia</strong>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <strong>Especialidad:</strong>
+                    <p>@Model.Especialidad</p>
+                </div>
+                <div class="col-md-6">
+                    <strong>Número de Licencia:</strong>
+                    <p>@Model.NumeroLicencia</p>
+                </div>
             </div>
         </div>
     </div>
 
     <div class="mt-4">
-        <a asp-controller="Medico" asp-action="Index" class="btn btn-outline-secondary">Volver</a>
+        <a href="@Url.Action("Index", "Medico")" class="btn btn-secondary">Volver al Listado</a>
     </div>
-</section>
+</div>

@@ -10,28 +10,28 @@
     "Id": 2,
     "Nombre": "Patricia",
     "Apellido": "Vega",
-    "Especialidad": "Pediatria",
+    "Especialidad": "Pediatr\u00EDa",
     "NumeroLicencia": "PD-20835"
   },
   {
     "Id": 3,
     "Nombre": "Roberto",
-    "Apellido": "Sanchez",
-    "Especialidad": "Cardiologia",
+    "Apellido": "S\u00E1nchez",
+    "Especialidad": "Cardiolog\u00EDa",
     "NumeroLicencia": "CA-30117"
   },
   {
     "Id": 4,
     "Nombre": "Jorge",
     "Apellido": "Pedrozo",
-    "Especialidad": "Fisicoquimica",
+    "Especialidad": "Fisicoqu\u00EDmica",
     "NumeroLicencia": "FQ-90289"
   },
   {
     "Id": 5,
-    "Nombre": "Diego ",
-    "Apellido": "Ramirez",
-    "Especialidad": "traumatologia",
-    "NumeroLicencia": "CALSEEPINKI03"
+    "Nombre": "Panchis",
+    "Apellido": "Alcocer",
+    "Especialidad": "Pok\u00E9mon",
+    "NumeroLicencia": "PO-230309"
   }
 ]

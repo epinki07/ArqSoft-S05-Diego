@@ -1,72 +1,100 @@
-@model ArqSoft_S05_Diego.Models.Cita
+@model CitasApp.Models.Cita
 
 @{
     ViewData["Title"] = "Editar Cita";
 }
 
-<section class="form-panel">
-    <div class="form-title">
-        <h1>Editar cita</h1>
-        <p>Actualiza la fecha, estado o motivo de la consulta.</p>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <h3 class="mb-0 text-white">
+                        <i class="fas fa-calendar-edit"></i> Editar Cita #@Model.Id
+                    </h3>
+                </div>
+                <div class="card-body p-5">
+                    <form method="post" novalidate>
+                        <input type="hidden" name="id" value="@Model.Id" />
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label for="pacienteId" class="form-label">
+                                    <i class="fas fa-user-injured"></i> Paciente
+                                </label>
+                                <select class="form-select" id="pacienteId" name="pacienteId" required>
+                                    <option value="">-- Seleccionar paciente --</option>
+                                    @foreach (var paciente in (IEnumerable<CitasApp.Models.Paciente>)ViewBag.Pacientes)
+                                    {
+                                        <option value="@paciente.Id" selected="@(paciente.Id == Model.PacienteId ? "selected" : null)">@paciente.Nombre @paciente.Apellido</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="PacienteId" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="medicoId" class="form-label">
+                                    <i class="fas fa-stethoscope"></i> Médico
+                                </label>
+                                <select class="form-select" id="medicoId" name="medicoId" required>
+                                    <option value="">-- Seleccionar médico --</option>
+                                    @foreach (var medico in (IEnumerable<CitasApp.Models.Medico>)ViewBag.Medicos)
+                                    {
+                                        <option value="@medico.Id" selected="@(medico.Id == Model.MedicoId ? "selected" : null)">@medico.Nombre @medico.Apellido (@medico.Especialidad)</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="MedicoId" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label for="fecha" class="form-label">
+                                    <i class="fas fa-calendar"></i> Fecha
+                                </label>
+                                <input type="date" class="form-control" id="fecha" name="fecha" value="@Model.Fecha.ToString("yyyy-MM-dd")" required>
+                                <span asp-validation-for="Fecha" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="hora" class="form-label">
+                                    <i class="fas fa-clock"></i> Hora
+                                </label>
+                                <input type="time" class="form-control" id="hora" name="hora" value="@Model.Hora.ToString("HH:mm")" required>
+                                <span asp-validation-for="Hora" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="motivo" class="form-label">
+                                <i class="fas fa-notes-medical"></i> Motivo de la Consulta
+                            </label>
+                            <input type="text" class="form-control" id="motivo" name="motivo" value="@Model.Motivo" placeholder="Motivo de la consulta" required>
+                            <span asp-validation-for="Motivo" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="estado" class="form-label">
+                                <i class="fas fa-check-circle"></i> Estado
+                            </label>
+                            <select class="form-select" id="estado" name="estado">
+                                <option value="Pendiente" selected="@(Model.Estado == "Pendiente" ? "selected" : null)">Pendiente</option>
+                                <option value="Confirmada" selected="@(Model.Estado == "Confirmada" ? "selected" : null)">Confirmada</option>
+                                <option value="Cancelada" selected="@(Model.Estado == "Cancelada" ? "selected" : null)">Cancelada</option>
+                            </select>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg flex-grow-1">
+                                <i class="fas fa-save"></i> Guardar Cambios
+                            </button>
+                            <a href="@Url.Action("Index", "Cita")" class="btn btn-secondary btn-lg">
+                                <i class="fas fa-times"></i> Cancelar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <form method="post" class="row g-3">
-        <input type="hidden" name="id" value="@Model.Id" />
-
-        <div class="col-md-6">
-            <label for="pacienteId" class="form-label">Paciente</label>
-            <select class="form-select" id="pacienteId" name="pacienteId" required>
-                <option value="">Seleccionar paciente...</option>
-                @foreach (var paciente in (IEnumerable<ArqSoft_S05_Diego.Models.Paciente>)ViewBag.Pacientes)
-                {
-                    <option value="@paciente.Id" selected="@(paciente.Id == Model.PacienteId ? "selected" : null)">@paciente.Nombre @paciente.Apellido</option>
-                }
-            </select>
-            <span asp-validation-for="PacienteId" class="text-danger"></span>
-        </div>
-
-        <div class="col-md-6">
-            <label for="medicoId" class="form-label">Medico</label>
-            <select class="form-select" id="medicoId" name="medicoId" required>
-                <option value="">Seleccionar medico...</option>
-                @foreach (var medico in (IEnumerable<ArqSoft_S05_Diego.Models.Medico>)ViewBag.Medicos)
-                {
-                    <option value="@medico.Id" selected="@(medico.Id == Model.MedicoId ? "selected" : null)">@medico.Nombre @medico.Apellido (@medico.Especialidad)</option>
-                }
-            </select>
-            <span asp-validation-for="MedicoId" class="text-danger"></span>
-        </div>
-
-        <div class="col-md-6">
-            <label for="fecha" class="form-label">Fecha</label>
-            <input type="date" class="form-control" id="fecha" name="fecha" value="@Model.Fecha.ToString("yyyy-MM-dd")" required>
-            <span asp-validation-for="Fecha" class="text-danger"></span>
-        </div>
-
-        <div class="col-md-6">
-            <label for="hora" class="form-label">Hora</label>
-            <input type="time" class="form-control" id="hora" name="hora" value="@Model.Hora.ToString("HH:mm")" required>
-            <span asp-validation-for="Hora" class="text-danger"></span>
-        </div>
-
-        <div class="col-12">
-            <label for="motivo" class="form-label">Motivo</label>
-            <input type="text" class="form-control" id="motivo" name="motivo" value="@Model.Motivo" placeholder="Motivo de la consulta" required>
-            <span asp-validation-for="Motivo" class="text-danger"></span>
-        </div>
-
-        <div class="col-md-6">
-            <label for="estado" class="form-label">Estado</label>
-            <select class="form-select" id="estado" name="estado">
-                <option value="Pendiente" selected="@(Model.Estado == "Pendiente" ? "selected" : null)">Pendiente</option>
-                <option value="Confirmada" selected="@(Model.Estado == "Confirmada" ? "selected" : null)">Confirmada</option>
-                <option value="Cancelada" selected="@(Model.Estado == "Cancelada" ? "selected" : null)">Cancelada</option>
-            </select>
-        </div>
-
-        <div class="col-12 d-flex gap-2">
-            <button type="submit" class="btn btn-primary">Guardar cambios</button>
-            <a asp-controller="Cita" asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
-        </div>
-    </form>
-</section>
+</div>

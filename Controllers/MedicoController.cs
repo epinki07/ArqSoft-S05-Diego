@@ -1,24 +1,20 @@
-using ArqSoft_S05_Diego.Interfaces;
-using ArqSoft_S05_Diego.Models;
+﻿using CitasApp.Interfaces;
+using CitasApp.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ArqSoft_S05_Diego.Controllers
+namespace CitasApp.Controllers
 {
     public class MedicoController : Controller
     {
         private readonly IMedicoRepository _repo;
-
-        public MedicoController(IMedicoRepository repo)
-        {
-            _repo = repo;
-        }
+        public MedicoController(IMedicoRepository repo) { _repo = repo; }
 
         public IActionResult Index() => View(_repo.ObtenerTodos());
 
         public IActionResult Detalle(int id)
         {
             var medico = _repo.ObtenerPorId(id);
-            return medico.Id == 0 ? NotFound() : View(medico);
+            return medico == null ? NotFound() : View(medico);
         }
 
         public IActionResult Create() => View();
@@ -31,7 +27,6 @@ namespace ArqSoft_S05_Diego.Controllers
                 _repo.Agregar(medico);
                 return RedirectToAction("Index");
             }
-
             return View(medico);
         }
 
@@ -39,10 +34,7 @@ namespace ArqSoft_S05_Diego.Controllers
         {
             var medico = _repo.ObtenerPorId(id);
             if (medico.Id == 0)
-            {
                 return NotFound();
-            }
-
             return View(medico);
         }
 
@@ -54,7 +46,6 @@ namespace ArqSoft_S05_Diego.Controllers
                 _repo.Editar(medico);
                 return RedirectToAction("Index");
             }
-
             return View(medico);
         }
 

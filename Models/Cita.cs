@@ -1,4 +1,4 @@
-namespace ArqSoft_S05_Diego.Models
+﻿namespace CitasApp.Models
 {
     public class Cita
     {
@@ -8,6 +8,6 @@ namespace ArqSoft_S05_Diego.Models
         public DateOnly Fecha { get; set; }
         public TimeOnly Hora { get; set; }
         public string Motivo { get; set; } = string.Empty;
-        public string Estado { get; set; } = string.Empty;
+        public string Estado { get; set; } = "Pendiente";
     }
 }

@@ -1,8 +1,8 @@
-using ArqSoft_S05_Diego.Interfaces;
-using ArqSoft_S05_Diego.Models;
+﻿using CitasApp.Interfaces;
+using CitasApp.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ArqSoft_S05_Diego.Controllers
+namespace CitasApp.Controllers
 {
     public class CitaController : Controller
     {
@@ -10,10 +10,9 @@ namespace ArqSoft_S05_Diego.Controllers
         private readonly IPacienteRepository _pacienteRepo;
         private readonly IMedicoRepository _medicoRepo;
 
-        public CitaController(
-            ICitaRepository citaRepo,
-            IPacienteRepository pacienteRepo,
-            IMedicoRepository medicoRepo)
+        public CitaController(ICitaRepository citaRepo,
+                              IPacienteRepository pacienteRepo,
+                              IMedicoRepository medicoRepo)
         {
             _citaRepo = citaRepo;
             _pacienteRepo = pacienteRepo;
@@ -59,9 +58,7 @@ namespace ArqSoft_S05_Diego.Controllers
         {
             var cita = _citaRepo.ObtenerPorId(id);
             if (cita.Id == 0)
-            {
                 return NotFound();
-            }
 
             ViewBag.Pacientes = _pacienteRepo.ObtenerTodos();
             ViewBag.Medicos = _medicoRepo.ObtenerTodos();

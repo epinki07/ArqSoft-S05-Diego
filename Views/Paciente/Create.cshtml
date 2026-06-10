@@ -1,43 +1,65 @@
-@model ArqSoft_S05_Diego.Models.Paciente
+@model CitasApp.Models.Paciente
 
 @{
-    ViewData["Title"] = "Agregar Paciente";
+    ViewData["Title"] = "Nuevo Paciente";
 }
 
-<section class="form-panel">
-    <div class="form-title">
-        <h1>Agregar paciente</h1>
-        <p>Captura la informacion de contacto del paciente.</p>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-header" style="background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);">
+                    <h3 class="mb-0 text-white">
+                        <i class="fas fa-user-plus"></i> Registrar Nuevo Paciente
+                    </h3>
+                </div>
+                <div class="card-body p-5">
+                    <form method="post" novalidate>
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label for="nombre" class="form-label">
+                                    <i class="fas fa-user"></i> Nombre
+                                </label>
+                                <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre completo" required>
+                                <span asp-validation-for="Nombre" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="apellido" class="form-label">
+                                    <i class="fas fa-user"></i> Apellido
+                                </label>
+                                <input type="text" class="form-control" id="apellido" name="apellido" placeholder="Apellido" required>
+                                <span asp-validation-for="Apellido" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="email" class="form-label">
+                                <i class="fas fa-envelope"></i> Email
+                            </label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="correo@ejemplo.com" required>
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="telefono" class="form-label">
+                                <i class="fas fa-phone"></i> Teléfono
+                            </label>
+                            <input type="tel" class="form-control" id="telefono" name="telefono" placeholder="555-0000" required>
+                            <span asp-validation-for="Telefono" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg flex-grow-1">
+                                <i class="fas fa-save"></i> Guardar Paciente
+                            </button>
+                            <a href="@Url.Action("Index", "Paciente")" class="btn btn-secondary btn-lg">
+                                <i class="fas fa-times"></i> Cancelar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <form method="post" class="row g-3">
-        <div class="col-md-6">
-            <label for="nombre" class="form-label">Nombre</label>
-            <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre del paciente" required>
-            <span asp-validation-for="Nombre" class="text-danger"></span>
-        </div>
-
-        <div class="col-md-6">
-            <label for="apellido" class="form-label">Apellido</label>
-            <input type="text" class="form-control" id="apellido" name="apellido" placeholder="Apellido del paciente" required>
-            <span asp-validation-for="Apellido" class="text-danger"></span>
-        </div>
-
-        <div class="col-md-6">
-            <label for="email" class="form-label">Email</label>
-            <input type="email" class="form-control" id="email" name="email" placeholder="correo@ejemplo.com" required>
-            <span asp-validation-for="Email" class="text-danger"></span>
-        </div>
-
-        <div class="col-md-6">
-            <label for="telefono" class="form-label">Telefono</label>
-            <input type="tel" class="form-control" id="telefono" name="telefono" placeholder="555-0000" required>
-            <span asp-validation-for="Telefono" class="text-danger"></span>
-        </div>
-
-        <div class="col-12 d-flex gap-2">
-            <button type="submit" class="btn btn-primary">Guardar paciente</button>
-            <a asp-controller="Paciente" asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
-        </div>
-    </form>
-</section>
+</div>

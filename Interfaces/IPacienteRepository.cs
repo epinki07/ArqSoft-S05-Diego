@@ -1,6 +1,6 @@
-using ArqSoft_S05_Diego.Models;
+using CitasApp.Models;
 
-namespace ArqSoft_S05_Diego.Interfaces
+namespace CitasApp.Interfaces
 {
     public interface IPacienteRepository
     {

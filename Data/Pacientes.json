@@ -2,21 +2,21 @@
   {
     "Id": 1,
     "Nombre": "Ana",
-    "Apellido": "Garcia",
+    "Apellido": "Garc\u00EDa",
     "Email": "ana@mail.com",
     "Telefono": "555-0001"
   },
   {
     "Id": 2,
     "Nombre": "Luis",
-    "Apellido": "Martinez",
+    "Apellido": "Mart\u00EDnez",
     "Email": "luis@mail.com",
     "Telefono": "555-0002"
   },
   {
     "Id": 3,
-    "Nombre": "Maria",
-    "Apellido": "Lopez",
+    "Nombre": "Mar\u00EDa",
+    "Apellido": "L\u00F3pez",
     "Email": "maria@mail.com",
     "Telefono": "555-0003"
   },
@@ -29,9 +29,9 @@
   },
   {
     "Id": 5,
-    "Nombre": "Michelle ",
-    "Apellido": "JUJU",
-    "Email": "bylev@gmail.com",
-    "Telefono": "9997485722"
+    "Nombre": "Michelle",
+    "Apellido": "C\u00E1mara",
+    "Email": "cgmichelle01@gmail.com",
+    "Telefono": "298300802"
   }
 ]

@@ -1,59 +1,76 @@
-@model IEnumerable<ArqSoft_S05_Diego.Models.Medico>
+@model IEnumerable<CitasApp.Models.Medico>
 
 @{
-    ViewData["Title"] = "Medicos";
+    ViewData["Title"] = "Médicos";
 }
 
-<section class="section-panel">
-    <div class="section-header">
-        <div>
-            <h1>Medicos</h1>
-            <p>Administra el directorio de especialistas y sus licencias.</p>
+<div class="container mt-5">
+    <div class="header-section">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <i class="fas fa-user-doctor fa-2x mb-2"></i>
+                <h1 class="mb-0">Directorio de Médicos</h1>
+                <p class="text-muted mb-0">@Model.Count() médico(s) registrado(s)</p>
+            </div>
+            <a href="@Url.Action("Create", "Medico")" class="btn btn-success btn-lg">
+                <i class="fas fa-plus"></i> Nuevo Médico
+            </a>
         </div>
-        <a asp-controller="Medico" asp-action="Create" class="btn btn-success">Agregar medico</a>
     </div>
 
-    <div class="table-responsive">
-        <table class="table table-hover align-middle">
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Nombre</th>
-                    <th>Especialidad</th>
-                    <th>Licencia</th>
-                    <th class="text-end">Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (Model?.Any() == true)
-                {
+    @if (Model.Any())
+    {
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th><i class="fas fa-hashtag"></i> Id</th>
+                        <th><i class="fas fa-user"></i> Nombre</th>
+                        <th><i class="fas fa-user"></i> Apellido</th>
+                        <th><i class="fas fa-briefcase-medical"></i> Especialidad</th>
+                        <th><i class="fas fa-certificate"></i> Licencia</th>
+                        <th><i class="fas fa-cog"></i> Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
                     @foreach (var medico in Model)
                     {
                         <tr>
-                            <td>@medico.Id</td>
+                            <td><strong>#@medico.Id</strong></td>
+                            <td>@medico.Nombre</td>
+                            <td>@medico.Apellido</td>
                             <td>
-                                <strong>@medico.Nombre @medico.Apellido</strong>
+                                <span class="badge bg-success">
+                                    @medico.Especialidad
+                                </span>
                             </td>
-                            <td>@medico.Especialidad</td>
-                            <td>@medico.NumeroLicencia</td>
-                            <td class="text-end">
-                                <a asp-controller="Medico" asp-action="Detalle" asp-route-id="@medico.Id" class="btn btn-sm btn-outline-primary">Detalle</a>
-                                <a asp-controller="Medico" asp-action="Edit" asp-route-id="@medico.Id" class="btn btn-sm btn-outline-warning">Editar</a>
-                                <form method="post" asp-controller="Medico" asp-action="Delete" class="d-inline">
+                            <td><code>@medico.NumeroLicencia</code></td>
+                            <td>
+                                <a href="@Url.Action("Edit", "Medico", new { id = medico.Id })" class="btn btn-sm btn-warning" title="Editar">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <form method="post" action="@Url.Action("Delete", "Medico")" style="display:inline;">
                                     <input type="hidden" name="id" value="@medico.Id" />
-                                    <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Esta seguro?')">Eliminar</button>
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Está seguro que desea eliminar este médico?')" title="Eliminar">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
                                 </form>
                             </td>
                         </tr>
                     }
-                }
-                else
-                {
-                    <tr>
-                        <td colspan="5" class="empty-row">No hay medicos registrados.</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-</section>
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info text-center py-5">
+            <i class="fas fa-inbox fa-3x mb-3"></i>
+            <h5>No hay médicos registrados</h5>
+            <p class="mb-3">¡Comienza agregando tu primer médico!</p>
+            <a href="@Url.Action("Create", "Medico")" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Registrar Médico
+            </a>
+        </div>
+    }
+</div>

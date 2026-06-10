@@ -1,4 +1,4 @@
-namespace ArqSoft_S05_Diego.Models
+namespace CitasApp.Models
 {
     public class ErrorViewModel
     {

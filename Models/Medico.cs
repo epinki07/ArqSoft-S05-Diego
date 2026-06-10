@@ -1,4 +1,4 @@
-namespace ArqSoft_S05_Diego.Models
+﻿namespace CitasApp.Models
 {
     public class Medico
     {
@@ -7,5 +7,6 @@ namespace ArqSoft_S05_Diego.Models
         public string Apellido { get; set; } = string.Empty;
         public string Especialidad { get; set; } = string.Empty;
         public string NumeroLicencia { get; set; } = string.Empty;
+
     }
 }

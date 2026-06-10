@@ -1,8 +1,8 @@
-using ArqSoft_S05_Diego.Interfaces;
-using ArqSoft_S05_Diego.Models;
+using CitasApp.Interfaces;
+using CitasApp.Models;
 using System.Text.Json;
 
-namespace ArqSoft_S05_Diego.Repositories
+namespace CitasApp.Repositories
 {
     public class JsonMedicoRepository : IMedicoRepository
     {
@@ -18,13 +18,13 @@ namespace ArqSoft_S05_Diego.Repositories
             try
             {
                 if (!File.Exists(_filePath))
-                {
                     return Enumerable.Empty<Medico>();
-                }
 
                 var json = File.ReadAllText(_filePath);
-                return JsonSerializer.Deserialize<List<Medico>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
+                var medicos = JsonSerializer.Deserialize<List<Medico>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
                     ?? new List<Medico>();
+
+                return medicos;
             }
             catch
             {
@@ -34,7 +34,8 @@ namespace ArqSoft_S05_Diego.Repositories
 
         public Medico ObtenerPorId(int id)
         {
-            return ObtenerTodos().FirstOrDefault(m => m.Id == id) ?? new Medico();
+            var medicos = ObtenerTodos();
+            return medicos.FirstOrDefault(m => m.Id == id) ?? new Medico();
         }
 
         public void Agregar(Medico medico)
@@ -44,10 +45,14 @@ namespace ArqSoft_S05_Diego.Repositories
                 var medicos = ObtenerTodos().ToList();
                 medico.Id = medicos.Count > 0 ? medicos.Max(m => m.Id) + 1 : 1;
                 medicos.Add(medico);
-                Guardar(medicos);
+
+                var options = new JsonSerializerOptions { WriteIndented = true, PropertyNameCaseInsensitive = true };
+                var json = JsonSerializer.Serialize(medicos, options);
+                File.WriteAllText(_filePath, json);
             }
             catch
             {
+                // Manejo de error silencioso
             }
         }
 
@@ -57,19 +62,21 @@ namespace ArqSoft_S05_Diego.Repositories
             {
                 var medicos = ObtenerTodos().ToList();
                 var medicoExistente = medicos.FirstOrDefault(m => m.Id == medico.Id);
-                if (medicoExistente == null)
+                if (medicoExistente != null)
                 {
-                    return;
-                }
+                    medicoExistente.Nombre = medico.Nombre;
+                    medicoExistente.Apellido = medico.Apellido;
+                    medicoExistente.Especialidad = medico.Especialidad;
+                    medicoExistente.NumeroLicencia = medico.NumeroLicencia;
 
-                medicoExistente.Nombre = medico.Nombre;
-                medicoExistente.Apellido = medico.Apellido;
-                medicoExistente.Especialidad = medico.Especialidad;
-                medicoExistente.NumeroLicencia = medico.NumeroLicencia;
-                Guardar(medicos);
+                    var options = new JsonSerializerOptions { WriteIndented = true, PropertyNameCaseInsensitive = true };
+                    var json = JsonSerializer.Serialize(medicos, options);
+                    File.WriteAllText(_filePath, json);
+                }
             }
             catch
             {
+                // Manejo de error silencioso
             }
         }
 
@@ -79,24 +86,19 @@ namespace ArqSoft_S05_Diego.Repositories
             {
                 var medicos = ObtenerTodos().ToList();
                 var medico = medicos.FirstOrDefault(m => m.Id == id);
-                if (medico == null)
+                if (medico != null)
                 {
-                    return;
-                }
+                    medicos.Remove(medico);
 
-                medicos.Remove(medico);
-                Guardar(medicos);
+                    var options = new JsonSerializerOptions { WriteIndented = true, PropertyNameCaseInsensitive = true };
+                    var json = JsonSerializer.Serialize(medicos, options);
+                    File.WriteAllText(_filePath, json);
+                }
             }
             catch
             {
+                // Manejo de error silencioso
             }
-        }
-
-        private void Guardar(List<Medico> medicos)
-        {
-            var options = new JsonSerializerOptions { WriteIndented = true, PropertyNameCaseInsensitive = true };
-            var json = JsonSerializer.Serialize(medicos, options);
-            File.WriteAllText(_filePath, json);
         }
     }
 }

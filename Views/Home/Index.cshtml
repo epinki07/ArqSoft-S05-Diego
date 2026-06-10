@@ -2,45 +2,124 @@
     ViewData["Title"] = "Inicio";
 }
 
-<section class="page-hero">
-    <div>
-        <p class="eyebrow">Panel principal</p>
-        <h1>Gestion de citas medicas</h1>
-        <p class="hero-copy">Administra pacientes, medicos y citas desde una interfaz centralizada.</p>
-    </div>
-    <a class="btn btn-primary" asp-controller="Cita" asp-action="Create">Nueva cita</a>
-</section>
+<div class="home-dashboard">
+    <section class="app-hero">
+        <div class="hero-copy">
+            <span class="eyebrow">Agenda clínica</span>
+            <h1>Control simple para citas médicas</h1>
+            <p>Consulta la agenda, registra pacientes y mantiene actualizado el directorio médico desde una interfaz clara.</p>
+            <div class="hero-actions">
+                <a href="/Cita/Create" class="btn btn-success">
+                    <i class="fas fa-plus"></i> Nueva cita
+                </a>
+                <a href="/Cita" class="btn btn-outline-primary">
+                    <i class="fas fa-calendar-check"></i> Agenda
+                </a>
+            </div>
+        </div>
+        <div class="hero-summary" aria-label="Resumen de módulos">
+            <div class="summary-item">
+                <i class="fas fa-calendar-day"></i>
+                <span>Citas</span>
+            </div>
+            <div class="summary-item">
+                <i class="fas fa-users"></i>
+                <span>Pacientes</span>
+            </div>
+            <div class="summary-item">
+                <i class="fas fa-user-doctor"></i>
+                <span>Médicos</span>
+            </div>
+        </div>
+    </section>
 
-<section class="stats-grid">
-    <article class="stat-card">
-        <span>Pacientes</span>
-        <strong>@ViewBag.TotalPacientes</strong>
-    </article>
-    <article class="stat-card">
-        <span>Medicos</span>
-        <strong>@ViewBag.TotalMedicos</strong>
-    </article>
-    <article class="stat-card">
-        <span>Citas</span>
-        <strong>@ViewBag.TotalCitas</strong>
-    </article>
-    <article class="stat-card">
-        <span>Pendientes</span>
-        <strong>@ViewBag.CitasPendientes</strong>
-    </article>
-</section>
+    <section class="quick-actions" aria-label="Acciones principales">
+        <article class="action-card">
+            <div class="action-icon appointments">
+                <i class="fas fa-calendar-check"></i>
+            </div>
+            <h2>Citas</h2>
+            <p>Revisa horarios, motivos y estado de cada consulta.</p>
+            <a href="/Cita" class="btn btn-primary btn-sm">Abrir</a>
+        </article>
 
-<section class="quick-actions">
-    <a class="action-panel" asp-controller="Paciente" asp-action="Index">
-        <span>Pacientes</span>
-        <strong>Ver y registrar pacientes</strong>
-    </a>
-    <a class="action-panel" asp-controller="Medico" asp-action="Index">
-        <span>Medicos</span>
-        <strong>Administrar especialistas</strong>
-    </a>
-    <a class="action-panel" asp-controller="Cita" asp-action="Index">
-        <span>Citas</span>
-        <strong>Consultar agenda medica</strong>
-    </a>
-</section>
+        <article class="action-card">
+            <div class="action-icon patients">
+                <i class="fas fa-users"></i>
+            </div>
+            <h2>Pacientes</h2>
+            <p>Consulta los datos de contacto de cada paciente.</p>
+            <a href="/Paciente" class="btn btn-primary btn-sm">Abrir</a>
+        </article>
+
+        <article class="action-card">
+            <div class="action-icon doctors">
+                <i class="fas fa-user-doctor"></i>
+            </div>
+            <h2>Médicos</h2>
+            <p>Administra especialistas y números de licencia.</p>
+            <a href="/Medico" class="btn btn-primary btn-sm">Abrir</a>
+        </article>
+
+        <article class="action-card emphasized">
+            <div class="action-icon new-appointment">
+                <i class="fas fa-plus"></i>
+            </div>
+            <h2>Nueva cita</h2>
+            <p>Registra paciente, médico, fecha y motivo.</p>
+            <a href="/Cita/Create" class="btn btn-success btn-sm">Crear</a>
+        </article>
+    </section>
+
+    <section class="info-grid">
+        <div class="info-panel">
+            <div>
+                <span class="panel-kicker">Agenda</span>
+                <h2>Información ordenada para el día a día</h2>
+                <p>La vista prioriza datos útiles: fecha, hora, paciente, médico y estado de cada cita.</p>
+            </div>
+            <a href="/Cita" class="panel-link">
+                Ver agenda <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+
+        <div class="status-panel">
+            <div class="status-row">
+                <span class="status-dot pending"></span>
+                <div>
+                    <strong>Pendiente</strong>
+                    <small>Por confirmar</small>
+                </div>
+            </div>
+            <div class="status-row">
+                <span class="status-dot confirmed"></span>
+                <div>
+                    <strong>Confirmada</strong>
+                    <small>Lista para atender</small>
+                </div>
+            </div>
+            <div class="status-row">
+                <span class="status-dot canceled"></span>
+                <div>
+                    <strong>Cancelada</strong>
+                    <small>Requiere seguimiento</small>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="trust-strip" aria-label="Beneficios del sistema">
+        <div>
+            <strong>Rápido</strong>
+            <span>Acceso directo</span>
+        </div>
+        <div>
+            <strong>Claro</strong>
+            <span>Datos legibles</span>
+        </div>
+        <div>
+            <strong>Local</strong>
+            <span>Archivos JSON</span>
+        </div>
+    </section>
+</div>

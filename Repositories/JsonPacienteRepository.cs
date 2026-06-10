@@ -1,8 +1,8 @@
-using ArqSoft_S05_Diego.Interfaces;
-using ArqSoft_S05_Diego.Models;
+using CitasApp.Interfaces;
+using CitasApp.Models;
 using System.Text.Json;
 
-namespace ArqSoft_S05_Diego.Repositories
+namespace CitasApp.Repositories
 {
     public class JsonPacienteRepository : IPacienteRepository
     {
@@ -18,13 +18,13 @@ namespace ArqSoft_S05_Diego.Repositories
             try
             {
                 if (!File.Exists(_filePath))
-                {
                     return Enumerable.Empty<Paciente>();
-                }
 
                 var json = File.ReadAllText(_filePath);
-                return JsonSerializer.Deserialize<List<Paciente>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
+                var pacientes = JsonSerializer.Deserialize<List<Paciente>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
                     ?? new List<Paciente>();
+
+                return pacientes;
             }
             catch
             {
@@ -34,7 +34,8 @@ namespace ArqSoft_S05_Diego.Repositories
 
         public Paciente ObtenerPorId(int id)
         {
-            return ObtenerTodos().FirstOrDefault(p => p.Id == id) ?? new Paciente();
+            var pacientes = ObtenerTodos();
+            return pacientes.FirstOrDefault(p => p.Id == id) ?? new Paciente();
         }
 
         public void Agregar(Paciente paciente)
@@ -44,10 +45,14 @@ namespace ArqSoft_S05_Diego.Repositories
                 var pacientes = ObtenerTodos().ToList();
                 paciente.Id = pacientes.Count > 0 ? pacientes.Max(p => p.Id) + 1 : 1;
                 pacientes.Add(paciente);
-                Guardar(pacientes);
+
+                var options = new JsonSerializerOptions { WriteIndented = true, PropertyNameCaseInsensitive = true };
+                var json = JsonSerializer.Serialize(pacientes, options);
+                File.WriteAllText(_filePath, json);
             }
             catch
             {
+                // Manejo de error silencioso
             }
         }
 
@@ -57,19 +62,21 @@ namespace ArqSoft_S05_Diego.Repositories
             {
                 var pacientes = ObtenerTodos().ToList();
                 var pacienteExistente = pacientes.FirstOrDefault(p => p.Id == paciente.Id);
-                if (pacienteExistente == null)
+                if (pacienteExistente != null)
                 {
-                    return;
-                }
+                    pacienteExistente.Nombre = paciente.Nombre;
+                    pacienteExistente.Apellido = paciente.Apellido;
+                    pacienteExistente.Email = paciente.Email;
+                    pacienteExistente.Telefono = paciente.Telefono;
 
-                pacienteExistente.Nombre = paciente.Nombre;
-                pacienteExistente.Apellido = paciente.Apellido;
-                pacienteExistente.Email = paciente.Email;
-                pacienteExistente.Telefono = paciente.Telefono;
-                Guardar(pacientes);
+                    var options = new JsonSerializerOptions { WriteIndented = true, PropertyNameCaseInsensitive = true };
+                    var json = JsonSerializer.Serialize(pacientes, options);
+                    File.WriteAllText(_filePath, json);
+                }
             }
             catch
             {
+                // Manejo de error silencioso
             }
         }
 
@@ -79,24 +86,19 @@ namespace ArqSoft_S05_Diego.Repositories
             {
                 var pacientes = ObtenerTodos().ToList();
                 var paciente = pacientes.FirstOrDefault(p => p.Id == id);
-                if (paciente == null)
+                if (paciente != null)
                 {
-                    return;
-                }
+                    pacientes.Remove(paciente);
 
-                pacientes.Remove(paciente);
-                Guardar(pacientes);
+                    var options = new JsonSerializerOptions { WriteIndented = true, PropertyNameCaseInsensitive = true };
+                    var json = JsonSerializer.Serialize(pacientes, options);
+                    File.WriteAllText(_filePath, json);
+                }
             }
             catch
             {
+                // Manejo de error silencioso
             }
-        }
-
-        private void Guardar(List<Paciente> pacientes)
-        {
-            var options = new JsonSerializerOptions { WriteIndented = true, PropertyNameCaseInsensitive = true };
-            var json = JsonSerializer.Serialize(pacientes, options);
-            File.WriteAllText(_filePath, json);
         }
     }
 }
