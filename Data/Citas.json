@@ -14,7 +14,7 @@
     "MedicoId": 2,
     "Fecha": "2026-06-01",
     "Hora": "10:00:00",
-    "Motivo": "Revisi\u00F3n de resultados",
+    "Motivo": "Revisión de resultados",
     "Estado": "Pendiente"
   },
   {
@@ -32,7 +32,7 @@
     "MedicoId": 4,
     "Fecha": "2026-06-03",
     "Hora": "12:00:00",
-    "Motivo": "Cirug\u00EDa",
+    "Motivo": "Cirugía",
     "Estado": "Confirmada"
   },
   {

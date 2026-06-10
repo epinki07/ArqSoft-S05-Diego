@@ -2,13 +2,13 @@
 
 CitasApp es una app web sencilla para llevar el control de citas medicas. La idea es tener en un solo lugar los pacientes, los medicos y las citas, sin tener que configurar una base de datos ni montar algo demasiado pesado.
 
-Esta hecha con ASP.NET Core MVC y guarda la informacion en archivos JSON, asi que funciona bien para practicar arquitectura, vistas, controladores, repositorios e interfaces.
+Esta hecha con ASP.NET Core MVC y puede guardar la informacion en archivos JSON o CSV, asi que funciona bien para practicar arquitectura, vistas, controladores, repositorios e interfaces.
 
 ## Objetivo
 
 El objetivo del proyecto es aplicar conceptos de arquitectura de software en una aplicacion real pero pequena. La app sirve para entender como se separan responsabilidades entre controladores, modelos, vistas, interfaces y repositorios.
 
-Tambien ayuda a ver algunos trade-offs: por ejemplo, usar JSON hace que el proyecto sea mas facil de correr, aunque no sea la opcion mas completa para una app grande.
+Tambien ayuda a ver algunos trade-offs: por ejemplo, usar archivos locales hace que el proyecto sea mas facil de correr, aunque no sea la opcion mas completa para una app grande.
 
 ## Que se puede hacer
 
@@ -28,6 +28,8 @@ Tambien ayuda a ver algunos trade-offs: por ejemplo, usar JSON hace que el proye
 - Bootstrap
 - CSS personalizado
 - Archivos JSON como almacenamiento local
+- Archivos CSV como almacenamiento alternativo
+- SQLite como adapter disponible para extender el almacenamiento
 
 ## Estructura del proyecto
 
@@ -53,7 +55,12 @@ CitasApp/
 ├── Data/
 │   ├── Citas.json
 │   ├── Medicos.json
-│   └── Pacientes.json
+│   ├── Pacientes.json
+│   ├── citas.csv
+│   ├── medicos.csv
+│   └── pacientes.csv
+├── Samples/
+│   └── Program_CitasApp.cs
 └── wwwroot/
     ├── css/
     └── js/
@@ -102,7 +109,36 @@ Permite listar, crear, editar y eliminar medicos. Cada medico tiene nombre, apel
 
 ## Almacenamiento de datos
 
-La app guarda la informacion en archivos JSON dentro de la carpeta `Data`. Esto hace que el proyecto sea facil de probar porque no requiere instalar ni configurar una base de datos.
+La app puede trabajar con dos fuentes de datos locales dentro de la carpeta `Data`:
+
+- JSON: datos originales del proyecto.
+- CSV: datos importados desde los archivos agregados posteriormente.
+
+La seleccion de la fuente se hace en `Program.cs`, en la variable `fuenteDatos`.
+
+Para usar JSON:
+
+```csharp
+var fuenteDatos = "json";
+// var fuenteDatos = "csv";
+```
+
+Para usar CSV:
+
+```csharp
+// var fuenteDatos = "json";
+var fuenteDatos = "csv";
+```
+
+Despues de cambiar la fuente, hay que detener la app y volverla a ejecutar. Refrescar el navegador no reinicia los servicios ni vuelve a cargar la configuracion.
+
+Los repositorios disponibles estan en `Repositories/`:
+
+- `JsonPacienteRepository`, `JsonMedicoRepository`, `JsonCitaRepository`
+- `CsvPacienteRepository`, `CsvMedicoRepository`, `CsvCitaRepository`
+- `SqlitePacienteRepository`, `SqliteMedicoRepository`, `SqliteCitaRepository`
+
+El archivo `Samples/Program_CitasApp.cs` queda solo como referencia de configuracion. No es el archivo que controla la app en ejecucion.
 
 ## Capturas
 
@@ -122,6 +158,6 @@ Esta pantalla sirve para registrar una cita nueva. El formulario permite selecci
 
 La idea es que el formulario sea directo y facil de usar, sin demasiados elementos visuales que distraigan. Solo muestra los campos necesarios para crear la cita.
 
-## Nota sobre IA
+## Notas de mantenimiento
 
-Para este proyecto se usaron herramientas de apoyo, incluyendo inteligencia artificial, principalmente para ordenar ideas, revisar estructura, conectar datos con la interfaz y mejorar la presentacion visual. La logica principal sigue siendo una app MVC sencilla basada en archivos JSON.
+Se agregaron adapters para CSV y SQLite sin eliminar los repositorios JSON existentes. Tambien se documentaron las fuentes de datos para que sea claro cuando se esta usando la informacion original y cuando se esta usando la informacion importada.
