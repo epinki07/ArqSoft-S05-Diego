@@ -5,6 +5,19 @@ using CitasApp.Repositories;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+
+// CORS - permite que la interfaz se conecte a la API
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("PermitirTodo", policy =>
+    {
+        policy.AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
+
 builder.Services.AddOpenApi();
 
 builder.Services.AddScoped<IPacienteRepository, JsonPacienteRepository>();
@@ -23,6 +36,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("PermitirTodo");
+
 app.UseAuthorization();
 
 app.MapControllers();

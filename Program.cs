@@ -5,10 +5,17 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
-// Activa SOLO una de estas dos lineas.
-// JSON = datos antiguos. CSV = datos nuevos descargados.
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("PermitirTodo", policy =>
+    {
+        policy.AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 var fuenteDatos = "json";
-// var fuenteDatos = "csv";
 
 switch (fuenteDatos)
 {
@@ -38,6 +45,8 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
+
+app.UseCors("PermitirTodo");
 
 app.UseAuthorization();
 
@@ -87,6 +96,22 @@ app.MapGet("/api/citas/porpaciente/{pacienteId:int}", (
             pacientes = pacientes.ObtenerTodos(),
             medicos = medicos.ObtenerTodos()
         });
+});
+
+app.MapGet("/api/calculadora/sumar", (decimal a, decimal b) =>
+    Results.Ok(new { operacion = "Suma", resultado = a + b }));
+
+app.MapGet("/api/calculadora/restar", (decimal a, decimal b) =>
+    Results.Ok(new { operacion = "Resta", resultado = a - b }));
+
+app.MapGet("/api/calculadora/multiplicar", (decimal a, decimal b) =>
+    Results.Ok(new { operacion = "Multiplicación", resultado = a * b }));
+
+app.MapGet("/api/calculadora/dividir", (decimal a, decimal b) =>
+{
+    return b == 0
+        ? Results.BadRequest(new { operacion = "División", mensaje = "No se puede dividir entre cero" })
+        : Results.Ok(new { operacion = "División", resultado = a / b });
 });
 
 app.MapControllerRoute(
