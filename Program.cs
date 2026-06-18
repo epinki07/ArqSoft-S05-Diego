@@ -43,6 +43,52 @@ app.UseAuthorization();
 
 app.MapStaticAssets();
 
+app.MapGet("/api/pacientes", (IPacienteRepository pacientes) =>
+    Results.Ok(pacientes.ObtenerTodos()));
+
+app.MapGet("/api/pacientes/{id:int}", (int id, IPacienteRepository pacientes) =>
+{
+    var paciente = pacientes.ObtenerPorId(id);
+    return paciente.Id == 0 ? Results.NotFound() : Results.Ok(paciente);
+});
+
+app.MapGet("/api/medicos", (IMedicoRepository medicos) =>
+    Results.Ok(medicos.ObtenerTodos()));
+
+app.MapGet("/api/medicos/{id:int}", (int id, IMedicoRepository medicos) =>
+{
+    var medico = medicos.ObtenerPorId(id);
+    return medico.Id == 0 ? Results.NotFound() : Results.Ok(medico);
+});
+
+app.MapGet("/api/citas", (
+    ICitaRepository citas,
+    IPacienteRepository pacientes,
+    IMedicoRepository medicos) =>
+    Results.Ok(new
+    {
+        citas = citas.ObtenerTodos(),
+        pacientes = pacientes.ObtenerTodos(),
+        medicos = medicos.ObtenerTodos()
+    }));
+
+app.MapGet("/api/citas/porpaciente/{pacienteId:int}", (
+    int pacienteId,
+    ICitaRepository citas,
+    IPacienteRepository pacientes,
+    IMedicoRepository medicos) =>
+{
+    var citasDelPaciente = citas.ObtenerPorPaciente(pacienteId).ToList();
+    return citasDelPaciente.Count == 0
+        ? Results.NotFound()
+        : Results.Ok(new
+        {
+            citas = citasDelPaciente,
+            pacientes = pacientes.ObtenerTodos(),
+            medicos = medicos.ObtenerTodos()
+        });
+});
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")

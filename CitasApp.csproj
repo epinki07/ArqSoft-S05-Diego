@@ -8,6 +8,14 @@
 
   <ItemGroup>
     <Compile Remove="Samples\**\*.cs" />
+    <Compile Remove="CitasApp.Api\**\*.cs" />
+    <Compile Remove="CitasApp.Application\**\*.cs" />
+    <Content Remove="CitasApp.Api\**" />
+    <Content Remove="CitasApp.Application\**" />
+    <EmbeddedResource Remove="CitasApp.Api\**" />
+    <EmbeddedResource Remove="CitasApp.Application\**" />
+    <None Remove="CitasApp.Api\**" />
+    <None Remove="CitasApp.Application\**" />
     <None Include="Samples\**\*.cs" />
   </ItemGroup>
 

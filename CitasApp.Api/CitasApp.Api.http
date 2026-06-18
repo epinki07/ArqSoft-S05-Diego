@@ -1,0 +1,31 @@
+@CitasApp.Api_HostAddress = http://localhost:5115
+
+GET {{CitasApp.Api_HostAddress}}/api/pacientes
+Accept: application/json
+
+###
+
+GET {{CitasApp.Api_HostAddress}}/api/pacientes/1
+Accept: application/json
+
+###
+
+GET {{CitasApp.Api_HostAddress}}/api/medicos
+Accept: application/json
+
+###
+
+GET {{CitasApp.Api_HostAddress}}/api/medicos/1
+Accept: application/json
+
+###
+
+GET {{CitasApp.Api_HostAddress}}/api/citas
+Accept: application/json
+
+###
+
+GET {{CitasApp.Api_HostAddress}}/api/citas/porpaciente/2
+Accept: application/json
+
+###
