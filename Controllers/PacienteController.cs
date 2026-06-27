@@ -14,7 +14,7 @@ namespace CitasApp.Controllers
         public IActionResult Detalle(int id)
         {
             var paciente = _repo.ObtenerPorId(id);
-            return paciente == null ? NotFound() : View(paciente);
+            return paciente.Id == 0 ? NotFound() : View(paciente);
         }
 
         public IActionResult Create() => View();

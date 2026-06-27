@@ -19,6 +19,54 @@ Tambien ayuda a ver algunos trade-offs: por ejemplo, usar archivos locales hace 
 - Editar informacion existente.
 - Eliminar registros cuando ya no se necesiten.
 - Consultar citas por paciente.
+- Consultar pacientes, medicos y citas mediante endpoints REST.
+- Confirmar una cita y disparar notificaciones SMS y email simuladas.
+
+## Practica 26: Factory, Decorator y Observer
+
+La seleccion del repositorio de pacientes se realiza con `RepositoryFactory`:
+
+- `Development` y otros entornos usan `JsonPacienteRepository`.
+- `Production` usa `MemoriaPacienteRepository`.
+
+Todas las operaciones de pacientes pasan por `LoggingPacienteRepository`, que
+escribe en la terminal la fecha, hora, operacion y resultado.
+
+Al confirmar una cita, `CitaService` actualiza su estado y notifica a
+`SmsObserver` y `EmailObserver`. Los observadores estan desacoplados del servicio
+mediante `ICitaObserver`.
+
+### Endpoints API
+
+- `GET /api/pacientes`
+- `GET /api/pacientes/{id}`
+- `GET /api/medicos`
+- `GET /api/medicos/{id}`
+- `GET /api/citas`
+- `GET /api/citas/porpaciente/{pacienteId}`
+- `POST /api/citas/confirmar/{citaId}`
+
+Los endpoints GET se pueden abrir directamente en el navegador. Para probar la
+confirmacion desde Bash:
+
+```bash
+curl -X POST http://localhost:5066/api/citas/confirmar/2
+```
+
+Desde PowerShell:
+
+```powershell
+Invoke-RestMethod -Method POST `
+  -Uri "http://localhost:5066/api/citas/confirmar/2"
+```
+
+La terminal de Rider debe mostrar un resultado similar a este:
+
+```text
+[2026-06-23 09:00:00] Cita 2 confirmada
+[SMS] Recordatorio enviado al paciente 2 - cita el 01/06/2026 a las 10:00
+[EMAIL] Confirmacion enviada al paciente 2 - motivo: Revision de resultados - estado: Confirmada
+```
 
 ## Tecnologias usadas
 
