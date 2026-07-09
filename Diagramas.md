@@ -168,4 +168,4 @@ classDiagram
 
 ## Declaracion de uso de IA
 
-Se utilizo inteligencia artificial como apoyo para organizar los diagramas, redactar notas de interpretacion y verificar que el contenido correspondiera con la estructura real del proyecto. La seleccion final, revision, commit y publicacion corresponden al autor del repositorio.
+El autor del repositorio definio el alcance de la entrega, reviso la arquitectura real de CitasApp, decidio que elementos incluir en cada diagrama, valido el contenido final y realizo la publicacion en GitHub. La inteligencia artificial se utilizo solo como apoyo para ordenar la documentacion, proponer redaccion inicial en Mermaid y ayudar a detectar posibles inconsistencias antes de la entrega.

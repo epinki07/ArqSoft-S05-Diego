@@ -223,4 +223,4 @@ Se agregaron adapters para CSV y SQLite sin eliminar los repositorios JSON exist
 
 ## Clausula de IA
 
-Se utilizo inteligencia artificial como apoyo para organizar los diagramas de la rama `UML`, redactar notas de interpretacion y revisar que el contenido correspondiera con la estructura real del proyecto. La revision, aceptacion, commit y publicacion del trabajo corresponden al autor del repositorio.
+El autor del repositorio definio el alcance, selecciono los elementos de CitasApp que debian aparecer en los diagramas, reviso la entrega y realizo los commits y la publicacion en GitHub. La inteligencia artificial se utilizo solo como apoyo para organizar la documentacion, sugerir una redaccion inicial en Mermaid y detectar inconsistencias menores.
