@@ -188,6 +188,17 @@ Los repositorios disponibles estan en `Repositories/`:
 
 El archivo `Samples/Program_CitasApp.cs` queda solo como referencia de configuracion. No es el archivo que controla la app en ejecucion.
 
+## Diagramas
+
+La rama de entrega para diagramas se llama `UML`.
+
+Los diagramas estan escritos como codigo Mermaid en [Diagramas.md](Diagramas.md). El archivo incluye:
+
+- C4 Nivel 1: Contexto.
+- C4 Nivel 2: Contenedores.
+- C4 Nivel 3: Componentes.
+- Diagrama de clases UML para `Paciente`, `Medico` y `Cita`.
+
 ## Capturas
 
 ### Pantalla de inicio
