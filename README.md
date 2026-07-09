@@ -220,3 +220,7 @@ La idea es que el formulario sea directo y facil de usar, sin demasiados element
 ## Notas de mantenimiento
 
 Se agregaron adapters para CSV y SQLite sin eliminar los repositorios JSON existentes. Tambien se documentaron las fuentes de datos para que sea claro cuando se esta usando la informacion original y cuando se esta usando la informacion importada.
+
+## Clausula de IA
+
+Se utilizo inteligencia artificial como apoyo para organizar los diagramas de la rama `UML`, redactar notas de interpretacion y revisar que el contenido correspondiera con la estructura real del proyecto. La revision, aceptacion, commit y publicacion del trabajo corresponden al autor del repositorio.

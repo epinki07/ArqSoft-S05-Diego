@@ -6,6 +6,10 @@
 # macOS
 .DS_Store
 
+# IDE y herramientas locales
+.idea/
+.codex/
+
 # User-specific files
 *.rsuser
 *.suo
