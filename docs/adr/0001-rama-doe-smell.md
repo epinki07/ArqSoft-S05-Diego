@@ -73,6 +73,77 @@ Esto permite:
 - Evitar modificar directamente la rama principal.
 - Mantener un punto estable para analisis academico o tecnico.
 
+## Verificacion De Rama Remota
+
+Se verifico que la rama remota `origin/doe-smell` existe y apunta al commit del ADR:
+
+```text
+10f46a0 docs: agregar ADR de rama doe-smell
+```
+
+Tambien se verifico que la rama local `doe-smell` esta alineada con `origin/doe-smell`.
+
+Quedo un cambio local independiente en:
+
+```text
+Catalogo.Infrastructure/Catalogo.Infrastructure.csproj
+```
+
+Ese cambio no forma parte del ADR.
+
+## Verificacion De PostgreSQL
+
+En el proyecto escolar se creo y probo una base de datos PostgreSQL para la aplicacion de citas.
+
+Datos de conexion usados:
+
+```text
+Host=localhost
+Port=5432
+Database=catalogoapp_db
+Username=catalogo_user
+Password=catalogo123
+```
+
+Cadena de conexion:
+
+```text
+Host=localhost;Port=5432;Database=catalogoapp_db;Username=catalogo_user;Password=catalogo123
+```
+
+La conexion se verifico con `psql` usando el usuario `catalogo_user`. Tambien se verifico que existan las tablas:
+
+```text
+Citas
+Medicos
+Pacientes
+```
+
+## Verificacion De Logins Y Roles
+
+Se reviso si existian logins separados para:
+
+- Usuario o paciente.
+- Medico.
+- Administrador.
+
+Resultado de la revision:
+
+```text
+No hay implementacion de login por roles en el codigo revisado.
+```
+
+En el proyecto de citas se encontro:
+
+- `UseAuthorization()` en `Program.cs`.
+- Autenticacion anonima habilitada en `launchSettings.json`.
+- No se encontro `UseAuthentication()`.
+- No se encontro `AddAuthentication()`.
+- No se encontraron controladores de login.
+- No se encontraron claims o roles para `Paciente`, `Medico` o `Administrador`.
+
+Por lo tanto, no se puede afirmar que los logins de usuario, medico y administrador funcionen correctamente. Para que esa validacion sea posible, primero se debe implementar autenticacion y autorizacion por roles.
+
 ## Uso De IA
 
 La IA se uso como apoyo para guiar el proceso, no para tomar control del repositorio remoto.
