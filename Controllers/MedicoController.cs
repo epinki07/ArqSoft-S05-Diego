@@ -1,9 +1,11 @@
 ﻿using CitasApp.Interfaces;
 using CitasApp.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CitasApp.Controllers
 {
+    [Authorize(Roles = "Administrador")]
     public class MedicoController : Controller
     {
         private readonly IMedicoRepository _repo;

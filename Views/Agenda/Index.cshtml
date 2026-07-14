@@ -1,0 +1,70 @@
+@model IEnumerable<CitasApp.Models.Agenda>
+
+@{
+    ViewData["Title"] = "Agenda";
+    var esPaciente = ViewBag.EsPaciente as bool? == true;
+}
+
+<div class="container mt-5">
+    <div class="header-section">
+        <div>
+            <i class="fas fa-calendar-days fa-2x mb-2"></i>
+            <h1 class="mb-0">Agenda</h1>
+            <p class="text-muted mb-0">@Model.Count() cita(s) en agenda</p>
+        </div>
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Hora</th>
+                        @if (!esPaciente)
+                        {
+                            <th>Paciente</th>
+                        }
+                        <th>Medico</th>
+                        @if (!esPaciente)
+                        {
+                            <th>Motivo</th>
+                        }
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Fecha.ToString("dd/MM/yyyy")</td>
+                            <td><strong>@item.Hora</strong></td>
+                            @if (!esPaciente)
+                            {
+                                <td>@item.PacienteNombre</td>
+                            }
+                            <td>@item.MedicoNombre</td>
+                            @if (!esPaciente)
+                            {
+                                <td>@item.Motivo</td>
+                            }
+                            <td>
+                                <span class="badge @(item.Estado == "Confirmada" ? "bg-success" : item.Estado == "Cancelada" ? "bg-danger" : "bg-warning")">
+                                    @item.Estado
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info text-center py-5">
+            <i class="fas fa-inbox fa-3x mb-3"></i>
+            <h5>No hay citas en agenda</h5>
+        </div>
+    }
+</div>

@@ -1,0 +1,48 @@
+@{
+    ViewData["Title"] = "Iniciar sesion";
+    var returnUrl = ViewBag.ReturnUrl as string;
+}
+
+<div class="container mt-5" style="max-width: 520px;">
+    <div class="card shadow-sm">
+        <div class="card-body p-4">
+            <h1 class="h3 mb-3">Iniciar sesion</h1>
+
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger">
+                    @foreach (var modelState in ViewData.ModelState.Values)
+                    {
+                        foreach (var error in modelState.Errors)
+                        {
+                            <div>@error.ErrorMessage</div>
+                        }
+                    }
+                </div>
+            }
+
+            <form asp-action="Login" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="returnUrl" value="@returnUrl" />
+
+                <div class="mb-3">
+                    <label for="nombreUsuario" class="form-label">Usuario</label>
+                    <input id="nombreUsuario" name="nombreUsuario" class="form-control" autocomplete="username" required />
+                </div>
+
+                <div class="mb-3">
+                    <label for="password" class="form-label">Contraseña</label>
+                    <input id="password" name="password" type="password" class="form-control" autocomplete="current-password" required />
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Entrar</button>
+            </form>
+
+            <div class="mt-4 small text-muted">
+                <div>admin / Admin123!</div>
+                <div>medico / Medico123!</div>
+                <div>paciente / Paciente123!</div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,10 +1,12 @@
 using CitasApp.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CitasApp.Controllers.Api
 {
     [ApiController]
     [Route("api/pacientes")]
+    [Authorize(Roles = "Administrador")]
     public class PacientesApiController : ControllerBase
     {
         private readonly IPacienteRepository _pacienteRepository;
