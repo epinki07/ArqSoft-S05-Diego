@@ -1,4 +1,4 @@
-# ADR 0001: Autenticacion por roles, usuarios semilla y agenda
+# ADR 0001: Autenticacion por roles, PostgreSQL y agenda
 
 ## Estado
 
@@ -6,36 +6,43 @@ Aceptado
 
 ## Contexto
 
-El proyecto necesitaba conectar la aplicacion con PostgreSQL y controlar la visibilidad de citas segun el tipo de usuario:
+La aplicacion necesitaba dejar de depender solo de archivos locales y usar PostgreSQL para guardar usuarios, pacientes, medicos, citas y agenda.
 
-- El administrador debe ver todo.
-- Los medicos deben poder ver la agenda completa.
-- Los pacientes solo deben ver sus propias citas.
-- Los pacientes no deben saber que otros pacientes tienen cita.
+Tambien se necesitaba controlar que cada tipo de usuario viera solo lo que le corresponde:
 
-Tambien se pidio crear usuarios concretos para el proyecto escolar:
+- El administrador ve todo.
+- Los medicos ven la agenda completa.
+- Los pacientes solo ven sus propias citas.
+- Los pacientes no deben ver nombres ni citas de otros pacientes.
 
-- `diego`
-- `carlos`
-- `joshua`
-- `michelle`
-- `jorge`
+Los usuarios pedidos para validar el flujo fueron:
 
-## Decisiones
+```text
+jorge    -> administrador
+joshua   -> medico
+michelle -> medico
+diego    -> paciente
+carlos   -> paciente
+```
 
-### 1. Usar PostgreSQL como fuente activa
+## Decision
 
-Se mantuvo `DataSource` en `postgres` y se uso la conexion:
+Se implemento autenticacion con cookies de ASP.NET Core, roles simples y persistencia en PostgreSQL.
+
+La aplicacion usa esta conexion:
 
 ```text
 Host=localhost;Port=5432;Database=catalogoapp_db;Username=catalogo_user;Password=catalogo123
 ```
 
-Decision: PostgreSQL queda como fuente real de datos porque permite persistir usuarios, citas y agenda en tablas relacionales.
+Se agregaron dos tablas principales:
 
-### 2. Crear tabla `Usuarios`
+```text
+Usuarios
+Agenda
+```
 
-Se agrego una tabla `Usuarios` con:
+La tabla `Usuarios` guarda las cuentas de acceso:
 
 ```text
 NombreUsuario
@@ -46,35 +53,21 @@ PacienteId
 MedicoId
 ```
 
-Decision: separar el concepto de usuario de los modelos `Paciente` y `Medico`.
-
-Motivo: una persona que inicia sesion no siempre es un paciente o medico. Por ejemplo, el administrador `jorge` no necesita `PacienteId` ni `MedicoId`.
-
-### 3. Usar roles
-
-Se definieron tres roles:
+La tabla `Agenda` guarda una version consultable de las citas:
 
 ```text
-Administrador
-Medico
-Paciente
+CitaId
+PacienteId
+MedicoId
+PacienteNombre
+MedicoNombre
+Fecha
+Hora
+Motivo
+Estado
 ```
 
-Decision: usar roles simplifica las reglas de acceso sin mezclar permisos dentro de las vistas.
-
-### 4. Usar cookies de autenticacion
-
-Se configuro autenticacion con cookies de ASP.NET Core.
-
-Decision: cookies es suficiente para una app MVC escolar y evita meter JWT o infraestructura extra innecesaria.
-
-### 5. Hashear contrasenas
-
-Las contrasenas no se guardan en texto plano. Se usa PBKDF2 con salt.
-
-Decision: aunque el proyecto sea escolar, se mantiene una practica minima correcta de seguridad.
-
-Usuarios semilla:
+## Credenciales De Prueba
 
 ```text
 jorge    / Jorge123!    / Administrador / Jorge Javier Pedrozo Romero
@@ -84,42 +77,158 @@ diego    / Diego123!    / Paciente
 carlos   / Carlos123!   / Paciente
 ```
 
-### 6. Crear tabla `Agenda`
+Las contrasenas no se guardan en texto plano. Se guardan con PBKDF2 y salt.
 
-Se agrego una tabla `Agenda` sincronizada desde `Citas`.
+## Datos Semilla
 
-Decision: aunque `Citas` ya contiene la informacion base, `Agenda` funciona como una vista persistida orientada a consulta.
+Se crean estos datos al iniciar la aplicacion si no existen:
 
-Motivo: permite tener una tabla explicita para el apartado de agenda, sin cambiar el significado de `Citas`.
+```text
+Paciente: Diego Ramirez
+Medico:   Joshua Medico
+Cita:     Consulta de Diego con Joshua
 
-### 7. Sincronizar Agenda desde el repositorio PostgreSQL de citas
+Paciente: Carlos Paciente
+Medico:   Michelle Medico
+Cita:     Consulta de Carlos con Michelle
+```
 
-Cuando se crea, edita o elimina una cita desde `PostgresCitaRepository`, tambien se actualiza `Agenda`.
+Tambien se limpio la semilla anterior de demostracion para evitar datos que confundieran la prueba:
 
-Decision: la sincronizacion queda en la capa de persistencia PostgreSQL porque es una preocupacion de almacenamiento, no de la vista.
+```text
+admin / medico / paciente
+Paciente Demo
+Medico Demo
+Consulta general
+```
 
-### 8. Filtrar acceso en backend
+## Reglas De Acceso
 
-La agenda se filtra en `AgendaController`:
+El filtrado se hace en backend, no solo en la vista.
+
+En `AgendaController`:
 
 ```text
 Administrador -> ve toda la agenda.
 Medico        -> ve toda la agenda.
-Paciente      -> solo ve las filas donde PacienteId coincide con su claim.
+Paciente      -> solo ve las filas donde PacienteId coincide con su usuario.
 ```
 
-Decision: no se confia solamente en esconder columnas HTML. El filtro se aplica antes de enviar el modelo a la vista.
+En la vista de agenda:
 
-## Verificacion
+- Administrador y medicos ven paciente, medico, fecha, hora, motivo y estado.
+- Pacientes ven fecha, hora, medico y estado de sus propias citas.
+- Pacientes no ven la columna de otros pacientes.
 
-Se verifico que la tabla `Agenda` contenga:
+## Por Que Se Tomaron Estas Decisiones
+
+Se separo `Usuario` de `Paciente` y `Medico` porque no todos los usuarios son pacientes o medicos. El administrador `jorge` necesita iniciar sesion, pero no debe tener `PacienteId` ni `MedicoId`.
+
+Se usaron roles (`Administrador`, `Medico`, `Paciente`) porque son suficientes para las reglas actuales y mantienen el codigo simple.
+
+Se uso autenticacion por cookies porque el proyecto es MVC y no necesita tokens JWT.
+
+Se creo `Agenda` como tabla separada porque el requisito pide una tabla de agenda. Aunque `Citas` ya tiene la informacion base, `Agenda` funciona como una tabla preparada para consulta.
+
+Se sincroniza `Agenda` desde `PostgresCitaRepository` cuando se crea, edita o elimina una cita. Asi la vista no tiene que construir la agenda manualmente.
+
+## Como Correr El Proyecto En Rider
+
+Abrir esta carpeta en Rider:
 
 ```text
-Diego Ramirez   -> Joshua Medico
-Carlos Paciente -> Michelle Medico
+/Users/diegoramirezmagana/RiderProjects/ArqSoft-S05-Diego
 ```
 
-Se probaron logins y acceso a `/Agenda`:
+Abrir la solucion:
+
+```text
+CitasApp.sln
+```
+
+Desde Rider:
+
+1. Seleccionar la configuracion `http` o el proyecto `CitasApp`.
+2. Presionar el boton verde Run.
+3. Revisar en la consola el puerto que diga `Now listening on`.
+
+En las pruebas manuales se uso:
+
+```text
+http://localhost:5099/Auth/Login
+```
+
+Importante: abrir solo `http://localhost` no funciona si la app esta escuchando en otro puerto. En ese caso el navegador puede quedar en blanco. Se debe abrir la URL completa con puerto.
+
+## Como Correr Por Terminal
+
+Desde la carpeta del proyecto:
+
+```bash
+cd /Users/diegoramirezmagana/RiderProjects/ArqSoft-S05-Diego
+dotnet run --no-build --urls http://localhost:5099
+```
+
+Luego abrir:
+
+```text
+http://localhost:5099/Auth/Login
+```
+
+## Pruebas Ejecutadas
+
+### Compilacion
+
+```bash
+dotnet build CitasApp.csproj
+```
+
+Resultado:
+
+```text
+Build succeeded
+```
+
+Quedo un warning heredado de SQLite, pero no bloquea la ejecucion:
+
+```text
+SQLitePCLRaw.lib.e_sqlite3 2.1.11 tiene una vulnerabilidad alta conocida.
+```
+
+### Verificar Usuarios En PostgreSQL
+
+```bash
+PGPASSWORD=catalogo123 psql -h localhost -U catalogo_user -d catalogoapp_db -c 'SELECT "NombreUsuario", "NombreCompleto", "Rol", "PacienteId", "MedicoId" FROM "Usuarios" ORDER BY "NombreUsuario";'
+```
+
+Resultado esperado:
+
+```text
+carlos   | Carlos Paciente             | Paciente
+diego    | Diego Ramirez               | Paciente
+jorge    | Jorge Javier Pedrozo Romero | Administrador
+joshua   | Joshua Medico               | Medico
+michelle | Michelle Medico             | Medico
+```
+
+### Verificar Agenda En PostgreSQL
+
+```bash
+PGPASSWORD=catalogo123 psql -h localhost -U catalogo_user -d catalogoapp_db -c 'SELECT "PacienteNombre", "MedicoNombre", "Fecha", "Hora", "Motivo" FROM "Agenda" ORDER BY "Fecha", "Hora";'
+```
+
+Resultado esperado:
+
+```text
+Diego Ramirez   | Joshua Medico
+Carlos Paciente | Michelle Medico
+```
+
+### Verificar Login Y Filtros
+
+Se probaron los cinco usuarios contra `/Agenda`.
+
+Resultado:
 
 ```text
 jorge    -> ve Diego/Joshua y Carlos/Michelle
@@ -129,41 +238,27 @@ diego    -> ve solo Diego/Joshua
 carlos   -> ve solo Carlos/Michelle
 ```
 
-Resultado:
+Tambien se verifico que:
 
 ```text
-Build OK
-PostgreSQL OK
-Login OK
-Filtrado de Agenda OK
+http://localhost:5099/Auth/Login -> responde OK
+http://localhost/                -> no responde si no hay servidor en el puerto 80
 ```
 
 ## Consideraciones SOLID
 
-- Responsabilidad unica: el controlador de login delega autenticacion a `AuthService`.
-- Inversion de dependencias: los controladores usan interfaces de repositorio cuando trabajan con datos de negocio.
-- Separacion de reglas: la vista solo muestra lo que recibe; el filtrado sensible ocurre en controladores/repositorios.
-- Abierto/cerrado: se agrego `Agenda` con su repositorio sin eliminar los repositorios JSON/CSV/SQLite existentes.
+- `AuthController` no valida contrasenas directamente; delega esa responsabilidad en `AuthService`.
+- Los controladores consumen repositorios e interfaces cuando trabajan con datos de negocio.
+- El filtrado sensible se hace antes de enviar datos a la vista.
+- `Agenda` se agrego sin eliminar los repositorios JSON, CSV o SQLite existentes.
 
-## Riesgos Y Mejores Practicas Pendientes
+## Riesgos Y Mejoras Pendientes
 
-- La sincronizacion de `Agenda` y `Citas` esta implementada en codigo. En un sistema real convendria usar migraciones formales, constraints y posiblemente una vista SQL o eventos de dominio.
-- Hay un warning de seguridad heredado por SQLite:
-
-```text
-SQLitePCLRaw.lib.e_sqlite3 2.1.11 tiene una vulnerabilidad alta conocida.
-```
-
-Si PostgreSQL sera la fuente definitiva, conviene quitar SQLite o actualizar sus paquetes.
+- `Agenda` duplica datos de `Citas`. Para este proyecto escolar es aceptable porque el requisito pide una tabla de agenda. En una aplicacion real podria ser una vista SQL o una consulta con joins.
+- La sincronizacion de `Agenda` se hace en codigo. En produccion convendria usar migraciones formales y restricciones de base de datos.
+- Actualmente los medicos ven toda la agenda porque asi se pidio. Si despues cada medico debe ver solo sus citas, el filtro debe cambiar en `AgendaController`.
+- Sigue existiendo el warning de SQLite. Si PostgreSQL sera la fuente definitiva, conviene quitar SQLite o actualizar sus paquetes.
 
 ## Uso De IA
 
-La IA apoyo en:
-
-- Crear comandos de PostgreSQL.
-- Guiar la instalacion del paquete NuGet.
-- Implementar autenticacion por roles.
-- Crear y verificar usuarios semilla.
-- Crear la tabla `Agenda`.
-- Probar logins y acceso por rol con `curl`.
-- Documentar decisiones tecnicas en este ADR.
+La IA se uso para guiar comandos, revisar errores, proponer la estructura de autenticacion, ejecutar pruebas locales, validar la salida de PostgreSQL y ordenar este ADR.
