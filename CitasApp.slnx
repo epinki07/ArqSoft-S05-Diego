@@ -1,3 +1,4 @@
 <Solution>
   <Project Path="CitasApp.csproj" />
+  <Project Path="tests/CitasApp.Tests/CitasApp.Tests.csproj" />
 </Solution>
